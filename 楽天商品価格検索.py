@@ -125,12 +125,24 @@ if uploaded_file is not None:
     try:
         # アップロードされたファイルを読み込み
         df = pd.read_csv(uploaded_file, encoding='shift_jis')
-        
+
+        item_list = [] 
+        for i in df:
+            serch_keyword = df[0][i]
+            ng_keyword = df[1][i]
+
+            # 入力パラメータ
+            serch_params={
+                "format" : "json",
+                "keyword" : serch_keyword,
+                "NGKeyword":ng_keyword,
+                "applicationId" : [APP_ID],
+                "availability" : 0,
+                "hits" : 1,
+                "page" : 1,
+                'sort': '+itemPrice',
+            }
+
         # データを表示
-        st.write(df)
-    except Exception as e:
-        # エラーメッセージを表示
-        st.error(f"データの読み込み中にエラーが発生しました: {e}")
-else:
-    # ファイルがアップロードされていない場合のメッセージ
-    st.write("ファイルをアップロードしてください")
+        st.write(item_list)
+
