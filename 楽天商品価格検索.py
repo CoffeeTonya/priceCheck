@@ -128,8 +128,8 @@ if uploaded_file is not None:
 
         item_list = [] 
         for index, row in df.iterrows():
-            search_keyword = row[0]
-            ng_keyword = row[1]
+            search_keyword = row[0][index]
+            ng_keyword = row[1][index]
 
             # 入力パラメータ
             search_params = {
