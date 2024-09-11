@@ -20,6 +20,9 @@ review = st.sidebar.radio(
     (0, 1)
 )
 
+# ファイルアップロード
+uploaded_file = st.file_uploader("ファイルアップロード", type='csv', key=1)
+
 tax01 = st.sidebar.checkbox('軽減税率')
 
 if st.sidebar.button('検索', key='my_button'):
@@ -111,3 +114,13 @@ if st.sidebar.button('検索', key='my_button'):
         
         # Streamlitアプリ内でテーブルを表示
         st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+
+
+# ------------------------------------------------------------------------------------
+
+# メイン画面
+# st.header('読み込みデータ表示')
+if uploaded_file is not None:
+    # アップロードファイルをメイン画面にデータ表示
+    df = pd.read_csv(uploaded_file)
+    st.write(list(df))
