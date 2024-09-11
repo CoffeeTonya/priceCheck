@@ -123,13 +123,16 @@ uploaded_file = st.file_uploader("CSVファイルをアップロードしてく�
 # ファイルがアップロードされたか確認
 if uploaded_file is not None:
     try:
-        # アップロードされたファイルを読み込み
+        # アップロードされたファイルをShift_JISで読み込み
         df = pd.read_csv(uploaded_file, encoding='shift_jis')
 
-        item_list = [] 
+        # 結果を格納するリスト
+        item_list = []
+
+        # CSVの各行を処理する
         for index, row in df.iterrows():
-            search_keyword = row[0][row]
-            ng_keyword = row[1][row]
+            search_keyword = row[0]
+            ng_keyword = row[1]
 
             # 入力パラメータ
             search_params = {
@@ -143,7 +146,7 @@ if uploaded_file is not None:
                 'sort': '+itemPrice',
             }
 
-            # リクエスト
+            # リクエストを送信
             response = requests.get(REQUEST_URL, search_params)
             result = response.json()
 
@@ -157,10 +160,23 @@ if uploaded_file is not None:
                         tmp_item[key] = item[key]
                 item_list.append(tmp_item.copy())
 
+        # 結果をDataFrameに変換
         df_result = pd.DataFrame(item_list)
 
-        # データを表示
-        st.write(df_result)
+        # カラムの順番と名前を変更
+        df_result = df_result.reindex(columns=['mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'reviewCount', 'reviewAverage', 'endTime'])
+        df_result.columns = ['画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']
+
+        # 画像にリンクをつける
+        df_result['画像'] = df_result.apply(
+            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}"></a>'
+            if isinstance(row["画像"], list) and len(row["画像"]) > 0 and isinstance(row["画像"][0], dict) and "imageUrl" in row["画像"][0]
+            else '',
+            axis=1
+        )
+
+        # Streamlitで結果を表示
+        st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
 
     except Exception as e:
         # エラーメッセージを表示
