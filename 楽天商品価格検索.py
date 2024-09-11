@@ -16,7 +16,7 @@ st.sidebar.markdown("* * * ")
 
 if selected_item == '個別検索':
     st.subheader('商品個別検索')
-    st.text('１商品を価格が安い順で出力します')
+    st.text('検索フォームに入力した商品を価格が安い順で出力します')
 
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
