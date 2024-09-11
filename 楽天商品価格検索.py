@@ -16,7 +16,7 @@ st.sidebar.markdown("* * * ")
 
 if selected_item == '個別検索':
     st.subheader('商品個別検索')
-    st.text('検索ワードにテキストを入力して検索ボタンを押してください')
+    st.text('１商品を価格が安い順で出力します')
 
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
@@ -126,10 +126,10 @@ if selected_item == '個別検索':
 # ------------------------------------------------------------------------------------
 
 else:
-    st.subheader('csv一括検索')
+    st.subheader('最安値 / csv一括検索')
     # ファイルのアップロードウィジェット
     uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
-    st.sidebar.text("検索ワード,除外ワード,消費税(0.08/0.1) の形式のcsvファイルをアップロードする")
+    st.sidebar.text("１商品の最安値を出力します")
 
     # ファイルがアップロードされたか確認
     if uploaded_file is not None:
