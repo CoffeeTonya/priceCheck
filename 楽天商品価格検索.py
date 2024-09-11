@@ -22,9 +22,6 @@ review = st.sidebar.radio(
     (0, 1)
 )
 
-# ファイルアップロード
-uploaded_file = st.file_uploader("ファイルアップロード", type='csv', key=1)
-
 tax01 = st.sidebar.checkbox('軽減税率')
 
 if st.sidebar.button('検索', key='my_button'):
