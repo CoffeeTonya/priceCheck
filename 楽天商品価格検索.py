@@ -215,16 +215,23 @@ else:
             # カスタムCSSを定義
             st.markdown("""
                 <style>
-                /* 正しいクラスセレクタの記述 */
-                .st-emotion-cache-13ln4jf {
-                    max-width: none;
-                    margin: 20px;
+                table {
+                    table-layout: fixed;
+                    width: 100%;
                 }
-                .st-emotion-cache-1rsyhoq th {
+                th, td {
+                    word-wrap: break-word;
                     text-align: left;
                 }
+                th:nth-child(1) { width: 10%; }  /* 画像 */
+                th:nth-child(2) { width: 15%; }  /* ショップ */
+                th:nth-child(3) { width: 25%; }  /* 商品名 */
+                th:nth-child(4) { width: 20%; }  /* 商品価格 */
+                th:nth-child(5) { width: 10%; }  /* ポイント */
+                th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
+                th:nth-child(7) { width: 10%; }  /* レビュー件数 */
                 </style>
-                """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
             # Streamlitで結果を表示
             st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
