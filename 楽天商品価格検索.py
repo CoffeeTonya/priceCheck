@@ -127,19 +127,19 @@ if uploaded_file is not None:
         df = pd.read_csv(uploaded_file, encoding='shift_jis')
 
         item_list = [] 
-        for i in df:
-            serch_keyword = df[0][i]
-            ng_keyword = df[1][i]
+        for index, row in df.iterrows():
+            search_keyword = row[0]
+            ng_keyword = row[1]
 
             # 入力パラメータ
-            serch_params={
-                "format" : "json",
-                "keyword" : serch_keyword,
-                "NGKeyword":ng_keyword,
-                "applicationId" : [APP_ID],
-                "availability" : 0,
-                "hits" : 1,
-                "page" : 1,
+            search_params = {
+                "format": "json",
+                "keyword": search_keyword,
+                "NGKeyword": ng_keyword,
+                "applicationId": APP_ID,
+                "availability": 0,
+                "hits": 1,
+                "page": 1,
                 'sort': '+itemPrice',
             }
 
@@ -149,7 +149,7 @@ if uploaded_file is not None:
 
             # 格納
             item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
-            for i in range(0, len(result['Items'])):
+            for i in range(len(result['Items'])):
                 tmp_item = {}
                 item = result['Items'][i]['Item']
                 for key in item_key:
@@ -157,10 +157,10 @@ if uploaded_file is not None:
                         tmp_item[key] = item[key]
                 item_list.append(tmp_item.copy())
 
-        df = pd.DataFrame(item_list)
+        df_result = pd.DataFrame(item_list)
 
         # データを表示
-        st.write(item_list)
+        st.write(df_result)
 
     except Exception as e:
         # エラーメッセージを表示
