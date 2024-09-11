@@ -16,7 +16,7 @@ st.sidebar.markdown("* * * ")
 
 if selected_item == '個別検索':
     st.subheader('商品個別検索')
-    st.text('楽天市場は3,980円以上で送料無料')
+    st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     st.text('検索フォームに入力した商品を価格が安い順で出力します')
 
     # 検索ワード
@@ -131,7 +131,7 @@ if selected_item == '個別検索':
 else:
     st.subheader('csv一括検索')
     st.text('csvファイル内にある各商品の最安値を検索します')
-    st.text('楽天市場は3,980円以上で送料無料')
+    st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
     uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
     st.sidebar.text("検索ワード,除外ワード,消費税(0.08/0.1)")
