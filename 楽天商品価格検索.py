@@ -232,6 +232,16 @@ else:
             # Streamlitで結果を表示
             st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
 
+            # CSVファイルとしてデータを出力するボタン
+            csv = df_result.to_csv(index=False).encode('utf-8')
+
+            st.download_button(
+                label="CSVファイルとしてダウンロード",
+                data=csv,
+                file_name='楽天市場検索結果.csv',
+                mime='text/csv',
+            )
+
         except Exception as e:
             # エラーメッセージを表示
             st.error(f"データの読み込み中にエラーが発生しました: {e}")
