@@ -169,11 +169,21 @@ if uploaded_file is not None:
 
         # 画像にリンクをつける
         df_result['画像'] = df_result.apply(
-            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}"></a>'
-            if isinstance(row["画像"], list) and len(row["画像"]) > 0 and isinstance(row["画像"][0], dict) and "imageUrl" in row["画像"][0]
+            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}"></a>' 
+            if isinstance(row["画像"], list) and len(row["画像"]) > 0 and isinstance(row["画像"][0], dict) and "imageUrl" in row["画像"][0] 
             else '',
             axis=1
         )
+
+        # ポイント計算
+        if tax01:
+            df_result['ポイント数'] = (round((df_result['商品価格'] / 1.08) * 0.01 * df_result['P倍付'])).astype(int)
+        else:
+            df_result['ポイント数'] = (round((df_result['商品価格'] / 1.1) * 0.01 * df_result['P倍付'])).astype(int)
+
+        df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+
+        df_result = df_result[['画像', 'ショップ', '商品名', '商品価格', 'P倍付', 'ポイント数', '価格-ポイント', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
 
         # Streamlitで結果を表示
         st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
