@@ -8,7 +8,6 @@ REQUEST_URL = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706
 APP_ID = 1027604414937000350
 
 st.title('楽天市場 商品価格検索')
-st.text('検索ワードを入力してください（除外ワードは必要に応じ修正）')
 
 # 機能選択
 selected_item = st.sidebar.radio('使用機能を選んでください', ['個別検索', 'csv検索'])
@@ -16,6 +15,9 @@ st.sidebar.markdown("* * * ")
 
 
 if selected_item == '個別検索':
+    st.subheader('商品個別検索')
+    st.text('検索ワードを入力してください（除外ワードは必要に応じ修正）')
+
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
     st.sidebar.text('※スペースで複数ワード検索可')
@@ -124,6 +126,7 @@ if selected_item == '個別検索':
 # ------------------------------------------------------------------------------------
 
 else:
+    st.subheader('csv一括検索')
     # ファイルのアップロードウィジェット
     uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
     st.sidebar.text("検索ワード,除外ワード,消費税(0.08/0.1) の形式のcsvファイルをアップロードする")
