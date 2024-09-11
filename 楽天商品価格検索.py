@@ -22,7 +22,7 @@ if selected_item == '個別検索':
     search_keyword = st.sidebar.text_input('検索ワード')
     st.sidebar.text('※スペースで複数ワード検索可')
     ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
-    hits = st.sidebar.number_input('検索数', min_value=1, max_value=100, value=10, step=1)
+    hits = st.sidebar.number_input('検索数', min_value=1, max_value=30, value=10, step=1)
     minPrice = st.sidebar.number_input('最小金額', value=1)
     maxPrice = st.sidebar.number_input('最大金額', value=999999)
     review = st.sidebar.radio(
@@ -119,7 +119,7 @@ if selected_item == '個別検索':
                 </style>
                 """, unsafe_allow_html=True)
 
-            st.text('商品価格昇順【20位まで】 / 画像クリックで商品ページへ')
+            st.text('商品価格昇順 / 画像クリックで商品ページへ')
             
             # CSVファイルとしてデータを出力するボタン
             csv = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
