@@ -207,7 +207,7 @@ else:
                 return ['background-color: #e5f2ff;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
 
             # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
-            styled_df = df.style.apply(highlight_shop, axis=1).format({
+            styled_df = df_result.style.apply(highlight_shop, axis=1).format({
                 'レビュー平均点': "{:.2f}"
             })
             
@@ -230,7 +230,7 @@ else:
                 """, unsafe_allow_html=True)
 
             # Streamlitで結果を表示
-            st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
+            st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
             # CSVファイルとしてデータを出力するボタン
             csv = df_result.to_csv(index=False).encode('utf-8')
