@@ -126,7 +126,8 @@ if selected_item == '個別検索':
 # ------------------------------------------------------------------------------------
 
 else:
-    st.subheader('１商品の最安値を出力します')
+    st.subheader('csv一括検索')
+    st.text('csvファイル内にある各商品の最安値を検索します')
     # ファイルのアップロードウィジェット
     uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
     st.sidebar.text("検索ワード,除外ワード,消費税(0.08/0.1)")
