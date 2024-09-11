@@ -107,7 +107,7 @@ if selected_item == '個別検索':
             st.markdown("""
                 <style>
                 .st-emotion-cache-13ln4jf table {
-                    table-layout: fixed;
+                    table-layout: auto;
                     width: 100%;
                 }
                 .st-emotion-cache-13ln4jf th, .st-emotion-cache-13ln4jf td {
@@ -222,7 +222,7 @@ else:
             st.markdown("""
                 <style>
                 .st-emotion-cache-13ln4jf table {
-                    table-layout: fixed;
+                    table-layout: atuo;
                     width: 100%;
                 }
                 .st-emotion-cache-13ln4jf th, .st-emotion-cache-13ln4jf td {
