@@ -111,6 +111,7 @@ if selected_item == '個別検索':
                 .st-emotion-cache-13ln4jf {
                     max-width: none;
                     margin: 20px;
+                    font-size: 14px;
                 }
                 .st-emotion-cache-1rsyhoq th {
                     text-align: left;
@@ -219,6 +220,7 @@ else:
                 .st-emotion-cache-13ln4jf {
                     max-width: none;
                     margin: 20px;
+                    font-size: 14px;
                 }
                 .st-emotion-cache-1rsyhoq th {
                     text-align: left;
