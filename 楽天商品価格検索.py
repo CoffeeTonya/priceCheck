@@ -16,7 +16,7 @@ st.sidebar.markdown("* * * ")
 
 if selected_item == '個別検索':
     st.subheader('商品個別検索')
-    st.text('検索ワードにテキストを入力してください')
+    st.text('検索ワードにテキストを入力して検索ボタンを押してください')
 
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
