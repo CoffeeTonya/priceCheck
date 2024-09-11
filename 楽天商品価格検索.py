@@ -64,7 +64,7 @@ if st.sidebar.button('検索', key='my_button'):
 
         # 画像にリンクをつける
         df['画像'] = df.apply(
-            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}" width="100px"></a>' 
+            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}"></a>' 
             if isinstance(row["画像"], list) and len(row["画像"]) > 0 and isinstance(row["画像"][0], dict) and "imageUrl" in row["画像"][0] 
             else '',
             axis=1
