@@ -1,0 +1,112 @@
+import streamlit as st
+import pandas as pd
+import requests
+
+REQUEST_URL = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706"
+APP_ID = 1027604414937000350
+
+st.title('楽天市場 商品価格検索')
+st.text('検索ワードを入力してください（除外ワードは必要に応じ修正）')
+
+# 検索ワード
+search_keyword = st.sidebar.text_input('検索ワード')
+st.sidebar.text('※スペースで複数ワード検索可')
+ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
+minPrice = st.sidebar.number_input('最小金額', value=1)
+maxPrice = st.sidebar.number_input('最大金額', value=999999)
+review = st.sidebar.radio(
+    "レビュー（0:すべて / 1:レビューあり）",
+    (0, 1)
+)
+
+tax01 = st.sidebar.checkbox('軽減税率')
+
+if st.sidebar.button('検索', key='my_button'):
+
+    if search_keyword == '':
+        st.text('検索ワードにテキストを入力してください')
+    else:
+        # 入力パラメータ
+        search_params = {
+            "format": "json",
+            "keyword": search_keyword,
+            "NGKeyword": ng_keyword,
+            "minPrice": minPrice,
+            "maxPrice": maxPrice,
+            "hasReviewFlag": review,
+            "applicationId": [APP_ID],
+            "availability": 1,
+            "hits": 20,
+            "page": 1,
+            'sort': '+itemPrice',
+        }
+
+        # リクエスト
+        response = requests.get(REQUEST_URL, search_params)
+        result = response.json()
+
+        # 格納
+        item_list = []
+        item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
+        for i in range(0, len(result['Items'])):
+            tmp_item = {}
+            item = result['Items'][i]['Item']
+            for key in item_key:
+                if key in item:
+                    tmp_item[key] = item[key]
+            item_list.append(tmp_item.copy())
+
+        df = pd.DataFrame(item_list)
+
+        # カラムの順番と名前を変更
+        df = df.reindex(columns=['mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'reviewCount', 'reviewAverage', 'endTime'])
+        df.columns = ['画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']
+
+        # 画像にリンクをつける
+        df['画像'] = df.apply(
+            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}" width="100px"></a>' 
+            if isinstance(row["画像"], list) and len(row["画像"]) > 0 and isinstance(row["画像"][0], dict) and "imageUrl" in row["画像"][0] 
+            else '',
+            axis=1
+        )
+
+        # ポイント計算
+        if tax01:
+            df['ポイント数'] = (round((df['商品価格'] / 1.08) * 0.01 * df['P倍付'])).astype(int)
+        else:
+            df['ポイント数'] = (round((df['商品価格'] / 1.1) * 0.01 * df['P倍付'])).astype(int)
+
+        df['価格-ポイント'] = df['商品価格'] - df['ポイント数']
+
+        df = df[['画像', 'ショップ', '商品名', '商品価格', 'P倍付', 'ポイント数', '価格-ポイント', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
+
+        # 特定の条件に基づいて行に色を付ける関数
+        def highlight_shop(row):
+            return ['background-color: #e5f2ff;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
+
+        # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
+        styled_df = df.style.apply(highlight_shop, axis=1).format({
+            'レビュー平均点': "{:.2f}"
+        })
+        
+        # インデックスをリセット
+        df = df.reset_index(drop=True)
+
+        # カスタムCSSを定義
+        st.markdown("""
+            <style>
+            /* 正しいクラスセレクタの記述 */
+            .st-emotion-cache-gh2jqd {
+                max-width: none;
+                margin: 20px;
+            }
+            .st-emotion-cache-eqffof th {
+                text-align: left;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+        st.text('商品価格昇順【20位まで】 / 画像クリックで商品ページへ')
+        
+        # Streamlitアプリ内でテーブルを表示
+        st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
