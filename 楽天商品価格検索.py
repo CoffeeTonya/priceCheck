@@ -103,7 +103,7 @@ if st.sidebar.button('検索', key='my_button'):
                 max-width: none;
                 margin: 20px;
             }
-            .st-emotion-cache-eqffof th {
+            .st-emotion-cache-1rsyhoq th {
                 text-align: left;
             }
             </style>
@@ -206,7 +206,7 @@ if uploaded_file is not None:
                 max-width: none;
                 margin: 20px;
             }
-            .st-emotion-cache-eqffof th {
+            .st-emotion-cache-1rsyhoq th {
                 text-align: left;
             }
             </style>
