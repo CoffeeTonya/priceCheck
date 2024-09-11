@@ -231,7 +231,7 @@ else:
                 }
                 .st-emotion-cache-13ln4jf th:nth-child(1) { width: 1; }  /* 画像 */
                 .st-emotion-cache-13ln4jf th:nth-child(2) { width: 1; }  /* ショップ */
-                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 1; }  /* 商品名 */
+                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 3; }  /* 商品名 */
                 .st-emotion-cache-13ln4jf th:nth-child(4) { width: 1; }  /* 商品価格 */
                 .st-emotion-cache-13ln4jf th:nth-child(5) { width: 1; }  /* ポイント */
                 .st-emotion-cache-13ln4jf th:nth-child(6) { width: 1; }  /* 価格-ポイント */
