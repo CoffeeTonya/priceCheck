@@ -229,13 +229,13 @@ else:
                     word-wrap: break-word;
                     text-align: left;
                 }
-                .st-emotion-cache-13ln4jf th:nth-child(1) { width: 10%; }  /* 画像 */
-                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 15%; }  /* ショップ */
-                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 35%; }  /* 商品名 */
-                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 10%; }  /* 商品価格 */
-                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 10%; }  /* ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 10%; }  /* レビュー件数 */
+                .st-emotion-cache-13ln4jf th:nth-child(1) { width: 1; }  /* 画像 */
+                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 1; }  /* ショップ */
+                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 1; }  /* 商品名 */
+                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 1; }  /* 商品価格 */
+                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 1; }  /* ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 1; }  /* 価格-ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 1; }  /* レビュー件数 */
                 </style>
             """, unsafe_allow_html=True)
 
