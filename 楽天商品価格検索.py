@@ -93,7 +93,7 @@ if selected_item == '個別検索':
 
             # 特定の条件に基づいて行に色を付ける関数
             def highlight_shop(row):
-                return ['background-color: #e5f2ff;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
+                return ['background-color: #ffe0ef;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
 
             # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
             styled_df = df.style.apply(highlight_shop, axis=1).format({
@@ -215,7 +215,7 @@ else:
 
             # 特定の条件に基づいて行に色を付ける関数
             def highlight_shop(row):
-                return ['background-color: #e5f2ff;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
+                return ['background-color: #ffe0ef;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
 
             # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
             styled_df = df_result.style.apply(highlight_shop, axis=1).format({
