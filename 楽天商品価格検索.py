@@ -89,7 +89,7 @@ if selected_item == '個別検索':
 
             df['価格-ポイント'] = df['商品価格'] - df['ポイント数']
 
-            df = df[['画像', 'ショップ', '商品名', '商品価格', 'P倍付', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
+            df = df[['画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
 
             # 特定の条件に基づいて行に色を付ける関数
             def highlight_shop(row):
@@ -121,10 +121,7 @@ if selected_item == '個別検索':
 
             st.text('商品価格昇順【20位まで】 / 画像クリックで商品ページへ')
             
-            # Streamlitアプリ内でテーブルを表示
-            st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
-
-                        # CSVファイルとしてデータを出力するボタン
+            # CSVファイルとしてデータを出力するボタン
             csv = df.to_csv(index=False).encode('shift-jis')
 
             st.download_button(
@@ -133,6 +130,10 @@ if selected_item == '個別検索':
                 file_name='楽天市場検索結果.csv',
                 mime='text/csv',
             )
+            
+            # Streamlitアプリ内でテーブルを表示
+            st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+
 
 
 # ------------------------------------------------------------------------------------
@@ -209,7 +210,7 @@ else:
 
             df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
-            df_result = df_result[['画像', 'ショップ', '商品名', '商品価格', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
+            df_result = df_result[['画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
 
 
             # 特定の条件に基づいて行に色を付ける関数
@@ -239,9 +240,6 @@ else:
                 </style>
                 """, unsafe_allow_html=True)
 
-            # Streamlitで結果を表示
-            st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
-
             # CSVファイルとしてデータを出力するボタン
             csv = df_result.to_csv(index=False).encode('shift-jis')
 
@@ -251,6 +249,10 @@ else:
                 file_name='楽天市場検索結果.csv',
                 mime='text/csv',
             )
+
+            # Streamlitで結果を表示
+            st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+
 
         except Exception as e:
             # エラーメッセージを表示
