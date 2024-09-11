@@ -143,6 +143,28 @@ if uploaded_file is not None:
                 'sort': '+itemPrice',
             }
 
+            # リクエスト
+            response = requests.get(REQUEST_URL, search_params)
+            result = response.json()
+
+            # 格納
+            item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
+            for i in range(0, len(result['Items'])):
+                tmp_item = {}
+                item = result['Items'][i]['Item']
+                for key in item_key:
+                    if key in item:
+                        tmp_item[key] = item[key]
+                item_list.append(tmp_item.copy())
+
+        df = pd.DataFrame(item_list)
+
         # データを表示
         st.write(item_list)
 
+    except Exception as e:
+        # エラーメッセージを表示
+        st.error(f"データの読み込み中にエラーが発生しました: {e}")
+else:
+    # ファイルがアップロードされていない場合のメッセージ
+    st.write("ファイルをアップロードしてください")
