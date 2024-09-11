@@ -120,9 +120,20 @@ if st.sidebar.button('検索', key='my_button'):
 
 # ------------------------------------------------------------------------------------
 
-# メイン画面
-# st.header('読み込みデータ表示')
+# ファイルのアップロードウィジェット
+uploaded_file = st.file_uploader("CSVファイルをアップロードしてください", type="csv")
+
+# ファイルがアップロードされたか確認
 if uploaded_file is not None:
-    # アップロードファイルをメイン画面にデータ表示
-    df = pd.read_csv(uploaded_file)
-    st.write(df)
+    try:
+        # アップロードされたファイルを読み込み
+        df = pd.read_csv(uploaded_file)
+        
+        # データを表示
+        st.write(df)
+    except Exception as e:
+        # エラーメッセージを表示
+        st.error(f"データの読み込み中にエラーが発生しました: {e}")
+else:
+    # ファイルがアップロードされていない場合のメッセージ
+    st.write("ファイルをアップロードしてください")
