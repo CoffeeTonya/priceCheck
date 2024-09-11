@@ -11,7 +11,6 @@ st.title('楽天市場 商品価格検索')
 st.text('検索ワードを入力してください（除外ワードは必要に応じ修正）')
 
 # 機能選択
-st.sidebar.markdown("* * * ")
 selected_item = st.sidebar.radio('使用機能を選んでください', ['個別検索', 'csv検索'])
 st.sidebar.markdown("* * * ")
 
