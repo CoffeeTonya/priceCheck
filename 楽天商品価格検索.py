@@ -123,4 +123,4 @@ if st.sidebar.button('検索', key='my_button'):
 if uploaded_file is not None:
     # アップロードファイルをメイン画面にデータ表示
     df = pd.read_csv(uploaded_file)
-    st.write(list(df))
+    st.write(df)
