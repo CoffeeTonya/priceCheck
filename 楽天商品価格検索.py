@@ -185,6 +185,33 @@ if uploaded_file is not None:
 
         df_result = df_result[['画像', 'ショップ', '商品名', '商品価格', 'P倍付', 'ポイント数', '価格-ポイント', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
 
+
+        # 特定の条件に基づいて行に色を付ける関数
+        def highlight_shop(row):
+            return ['background-color: #e5f2ff;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
+
+        # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
+        styled_df = df.style.apply(highlight_shop, axis=1).format({
+            'レビュー平均点': "{:.2f}"
+        })
+        
+        # インデックスをリセット
+        df = df.reset_index(drop=True)
+
+        # カスタムCSSを定義
+        st.markdown("""
+            <style>
+            /* 正しいクラスセレクタの記述 */
+            .st-emotion-cache-13ln4jf {
+                max-width: none;
+                margin: 20px;
+            }
+            .st-emotion-cache-eqffof th {
+                text-align: left;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
         # Streamlitで結果を表示
         st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
 
