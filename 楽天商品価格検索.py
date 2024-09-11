@@ -16,6 +16,7 @@ st.sidebar.markdown("* * * ")
 
 if selected_item == '個別検索':
     st.subheader('商品個別検索')
+    st.text('検索ワードにテキストを入力してください')
 
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
@@ -32,7 +33,6 @@ if selected_item == '個別検索':
     tax01 = st.sidebar.checkbox('軽減税率')
 
     if st.sidebar.button('検索', key='my_button'):
-        st.text('検索ワードにテキストを入力してください')
 
         if search_keyword == '':
             st.text('検索ワードにテキストを入力してください')
