@@ -175,28 +175,6 @@ if uploaded_file is not None:
             axis=1
         )
 
-        # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
-        styled_df = df.style.apply(highlight_shop, axis=1).format({
-            'レビュー平均点': "{:.2f}"
-        })
-        
-        # インデックスをリセット
-        df = df.reset_index(drop=True)
-
-        # カスタムCSSを定義
-        st.markdown("""
-            <style>
-            /* 正しいクラスセレクタの記述 */
-            .st-emotion-cache-13ln4jf {
-                max-width: none;
-                margin: 20px;
-            }
-            .st-emotion-cache-eqffof th {
-                text-align: left;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-
         # Streamlitで結果を表示
         st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
 
