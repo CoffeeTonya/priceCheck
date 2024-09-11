@@ -107,22 +107,7 @@ if selected_item == '個別検索':
             st.markdown("""
                 <style>
                 /* 正しいクラスセレクタの記述 */
-                table {
-                    table-layout: fixed;
-                    width: 100%;
-                }
-                th, td {
-                    word-wrap: break-word;
-                    text-align: left;
-                }
-                .st-emotion-cache-1rsyhoq th:nth-child(1) { width: 10%; }  /* 画像 */
-                .st-emotion-cache-1rsyhoq th:nth-child(2) { width: 15%; }  /* ショップ */
-                .st-emotion-cache-1rsyhoq th:nth-child(3) { width: 25%; }  /* 商品名 */
-                .st-emotion-cache-1rsyhoq th:nth-child(4) { width: 20%; }  /* 商品価格 */
-                .st-emotion-cache-1rsyhoq th:nth-child(5) { width: 10%; }  /* ポイント */
-                .st-emotion-cache-1rsyhoq th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
-                .st-emotion-cache-1rsyhoq th:nth-child(7) { width: 10%; }  /* レビュー件数 */
-                }
+                        
                 .st-emotion-cache-13ln4jf {
                     max-width: none;
                     margin: 20px;
