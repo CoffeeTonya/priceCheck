@@ -12,6 +12,7 @@ st.text('検索ワードを入力してください（除外ワードは必要�
 search_keyword = st.sidebar.text_input('検索ワード')
 st.sidebar.text('※スペースで複数ワード検索可')
 ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
+hits = st.sidebar.number_input('検索数', min_value=1, max_value=100, value=10, step=1)
 minPrice = st.sidebar.number_input('最小金額', value=1)
 maxPrice = st.sidebar.number_input('最大金額', value=999999)
 review = st.sidebar.radio(
@@ -36,7 +37,7 @@ if st.sidebar.button('検索', key='my_button'):
             "hasReviewFlag": review,
             "applicationId": [APP_ID],
             "availability": 1,
-            "hits": 20,
+            "hits": hits,
             "page": 1,
             'sort': '+itemPrice',
         }
@@ -96,7 +97,7 @@ if st.sidebar.button('検索', key='my_button'):
         st.markdown("""
             <style>
             /* 正しいクラスセレクタの記述 */
-            .st-emotion-cache-13ln4jf {
+            .st-emotion-cache-gh2jqd {
                 max-width: none;
                 margin: 20px;
             }
