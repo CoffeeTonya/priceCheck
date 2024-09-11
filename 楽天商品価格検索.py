@@ -122,7 +122,7 @@ if selected_item == '個別検索':
             st.text('商品価格昇順【20位まで】 / 画像クリックで商品ページへ')
             
             # CSVファイルとしてデータを出力するボタン
-            csv = df.to_csv(index=False).encode('shift-jis')
+            csv = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
 
             st.download_button(
                 label="CSVファイルとしてダウンロード",
@@ -241,7 +241,7 @@ else:
                 """, unsafe_allow_html=True)
 
             # CSVファイルとしてデータを出力するボタン
-            csv = df_result.to_csv(index=False).encode('shift-jis')
+            csv = df_result.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
 
             st.download_button(
                 label="CSVファイルとしてダウンロード",
