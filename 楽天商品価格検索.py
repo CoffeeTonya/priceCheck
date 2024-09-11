@@ -106,17 +106,23 @@ if selected_item == '個別検索':
             # カスタムCSSを定義
             st.markdown("""
                 <style>
-                /* 正しいクラスセレクタの記述 */
-                        
-                .st-emotion-cache-13ln4jf {
-                    max-width: none;
-                    margin: 20px;
+                .st-emotion-cache-13ln4jf table {
+                    table-layout: fixed;
+                    width: 100%;
                 }
-                .st-emotion-cache-1rsyhoq th {
+                .st-emotion-cache-13ln4jf th, .st-emotion-cache-13ln4jf td {
+                    word-wrap: break-word;
                     text-align: left;
                 }
+                .st-emotion-cache-13ln4jf th:nth-child(1) { width: 10%; }  /* 画像 */
+                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 15%; }  /* ショップ */
+                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 35%; }  /* 商品名 */
+                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 10%; }  /* 商品価格 */
+                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 10%; }  /* ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 10%; }  /* レビュー件数 */
                 </style>
-                """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
             st.text('商品価格昇順【20位まで】 / 画像クリックで商品ページへ')
             
@@ -215,21 +221,21 @@ else:
             # カスタムCSSを定義
             st.markdown("""
                 <style>
-                table {
+                .st-emotion-cache-13ln4jf table {
                     table-layout: fixed;
                     width: 100%;
                 }
-                th, td {
+                .st-emotion-cache-13ln4jf th, .st-emotion-cache-13ln4jf td {
                     word-wrap: break-word;
                     text-align: left;
                 }
-                th:nth-child(1) { width: 10%; }  /* 画像 */
-                th:nth-child(2) { width: 15%; }  /* ショップ */
-                th:nth-child(3) { width: 25%; }  /* 商品名 */
-                th:nth-child(4) { width: 20%; }  /* 商品価格 */
-                th:nth-child(5) { width: 10%; }  /* ポイント */
-                th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
-                th:nth-child(7) { width: 10%; }  /* レビュー件数 */
+                .st-emotion-cache-13ln4jf th:nth-child(1) { width: 10%; }  /* 画像 */
+                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 15%; }  /* ショップ */
+                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 35%; }  /* 商品名 */
+                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 10%; }  /* 商品価格 */
+                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 10%; }  /* ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 10%; }  /* レビュー件数 */
                 </style>
             """, unsafe_allow_html=True)
 
