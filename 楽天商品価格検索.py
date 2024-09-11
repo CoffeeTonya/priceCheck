@@ -15,9 +15,8 @@ st.sidebar.markdown("* * * ")
 
 
 if selected_item == '個別検索':
-    st.subheader('商品個別検索')
+    st.subheader('検索フォームに入力した商品を価格が安い順で出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
-    st.text('検索フォームに入力した商品を価格が安い順で出力します')
 
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
@@ -129,8 +128,7 @@ if selected_item == '個別検索':
 # ------------------------------------------------------------------------------------
 
 else:
-    st.subheader('csv一括検索')
-    st.text('csvファイル内にある各商品の最安値を検索します')
+    st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
     uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
