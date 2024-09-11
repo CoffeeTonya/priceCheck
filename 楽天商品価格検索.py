@@ -124,7 +124,7 @@ uploaded_file = st.file_uploader("CSVファイルをアップロードしてく�
 if uploaded_file is not None:
     try:
         # アップロードされたファイルを読み込み
-        df = pd.read_csv(uploaded_file)
+        df = pd.read_csv(uploaded_file, encoding='shift_jis')
         
         # データを表示
         st.write(df)
