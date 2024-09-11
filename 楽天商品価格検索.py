@@ -21,7 +21,7 @@ if selected_item == '個別検索':
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
     orFlag = st.sidebar.radio(
-        "レビュー（0:AND検索 / 1:OR検索）",
+        "複数ワード入力時（0:AND検索 / 1:OR検索）",
         (0, 1)
     )
     st.sidebar.text('※スペースで複数ワード検索可')
