@@ -124,6 +124,16 @@ if selected_item == '個別検索':
             # Streamlitアプリ内でテーブルを表示
             st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
+                        # CSVファイルとしてデータを出力するボタン
+            csv = df.to_csv(index=False).encode('shift-jis')
+
+            st.download_button(
+                label="CSVファイルとしてダウンロード",
+                data=csv,
+                file_name='楽天市場検索結果.csv',
+                mime='text/csv',
+            )
+
 
 # ------------------------------------------------------------------------------------
 
@@ -233,7 +243,7 @@ else:
             st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
             # CSVファイルとしてデータを出力するボタン
-            csv = df_result.to_csv(index=False).encode('utf-8')
+            csv = df_result.to_csv(index=False).encode('shift-jis')
 
             st.download_button(
                 label="CSVファイルとしてダウンロード",
