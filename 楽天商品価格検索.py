@@ -115,12 +115,12 @@ if selected_item == '個別検索':
                     text-align: left;
                 }
                 .st-emotion-cache-13ln4jf th:nth-child(1) { width: 10%; }  /* 画像 */
-                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 20%; }  /* ショップ */
-                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 42%; }  /* 商品名 */
-                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 7%; }  /* 商品価格 */
-                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 7%; }  /* ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 7%; }  /* 価格-ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 7%; }  /* レビュー件数 */
+                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 15%; }  /* ショップ */
+                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 35%; }  /* 商品名 */
+                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 10%; }  /* 商品価格 */
+                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 10%; }  /* ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 10%; }  /* レビュー件数 */
                 </style>
             """, unsafe_allow_html=True)
 
@@ -230,12 +230,12 @@ else:
                     text-align: left;
                 }
                 .st-emotion-cache-13ln4jf th:nth-child(1) { width: 10%; }  /* 画像 */
-                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 20%; }  /* ショップ */
-                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 42%; }  /* 商品名 */
-                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 7%; }  /* 商品価格 */
-                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 7%; }  /* ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 7%; }  /* 価格-ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 7%; }  /* レビュー件数 */
+                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 15%; }  /* ショップ */
+                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 35%; }  /* 商品名 */
+                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 10%; }  /* 商品価格 */
+                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 10%; }  /* ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
+                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 10%; }  /* レビュー件数 */
                 </style>
             """, unsafe_allow_html=True)
 
