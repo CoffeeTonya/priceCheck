@@ -97,7 +97,7 @@ if st.sidebar.button('検索', key='my_button'):
         st.markdown("""
             <style>
             /* 正しいクラスセレクタの記述 */
-            .st-emotion-cache-gh2jqd {
+            .st-emotion-cache-13ln4jf {
                 max-width: none;
                 margin: 20px;
             }
