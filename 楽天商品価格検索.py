@@ -140,6 +140,7 @@ else:
             for index, row in df.iterrows():
                 search_keyword = row[0]
                 ng_keyword = row[1]
+                tax01 = row[2]
 
                 # 入力パラメータ
                 search_params = {
