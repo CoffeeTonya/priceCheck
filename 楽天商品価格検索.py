@@ -125,7 +125,7 @@ if selected_item == '個別検索':
 
 else:
     # ファイルのアップロードウィジェット
-    uploaded_file = st.file_uploader("CSVファイルをアップロードしてください", type="csv")
+    uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロードしてください", type="csv")
 
     # ファイルがアップロードされたか確認
     if uploaded_file is not None:
