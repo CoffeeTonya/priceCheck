@@ -32,6 +32,7 @@ if selected_item == '個別検索':
     tax01 = st.sidebar.checkbox('軽減税率')
 
     if st.sidebar.button('検索', key='my_button'):
+        st.text('検索ワードにテキストを入力してください')
 
         if search_keyword == '':
             st.text('検索ワードにテキストを入力してください')
