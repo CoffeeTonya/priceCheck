@@ -20,6 +20,10 @@ if selected_item == '個別検索':
 
     # 検索ワード
     search_keyword = st.sidebar.text_input('検索ワード')
+    orFlag = st.sidebar.radio(
+        "レビュー（0:AND検索 / 1:OR検索）",
+        (0, 1)
+    )
     st.sidebar.text('※スペースで複数ワード検索可')
     ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
     hits = st.sidebar.number_input('検索数', min_value=1, max_value=30, value=10, step=1)
@@ -40,6 +44,7 @@ if selected_item == '個別検索':
             "format": "json",
             "keyword": search_keyword,
             "NGKeyword": ng_keyword,
+            "orFlag": orFlag,
             "minPrice": minPrice,
             "maxPrice": maxPrice,
             "hasReviewFlag": review,
