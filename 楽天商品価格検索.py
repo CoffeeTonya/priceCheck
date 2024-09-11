@@ -106,23 +106,17 @@ if selected_item == '個別検索':
             # カスタムCSSを定義
             st.markdown("""
                 <style>
-                .st-emotion-cache-13ln4jf table {
-                    table-layout: fixed;
-                    width: 100%;
+                /* 正しいクラスセレクタの記述 */
+                        
+                .st-emotion-cache-13ln4jf {
+                    max-width: none;
+                    margin: 20px;
                 }
-                .st-emotion-cache-13ln4jf th, .st-emotion-cache-13ln4jf td {
-                    word-wrap: break-word;
+                .st-emotion-cache-1rsyhoq th {
                     text-align: left;
                 }
-                .st-emotion-cache-13ln4jf th:nth-child(1) { width: 10%; }  /* 画像 */
-                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 15%; }  /* ショップ */
-                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 35%; }  /* 商品名 */
-                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 10%; }  /* 商品価格 */
-                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 10%; }  /* ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 10%; }  /* 価格-ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 10%; }  /* レビュー件数 */
                 </style>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
 
             st.text('商品価格昇順【20位まで】 / 画像クリックで商品ページへ')
             
@@ -221,23 +215,16 @@ else:
             # カスタムCSSを定義
             st.markdown("""
                 <style>
-                .st-emotion-cache-13ln4jf table {
-                    table-layout: fixed;
-                    width: 100%;
+                /* 正しいクラスセレクタの記述 */
+                .st-emotion-cache-13ln4jf {
+                    max-width: none;
+                    margin: 20px;
                 }
-                .st-emotion-cache-13ln4jf th, .st-emotion-cache-13ln4jf td {
-                    word-wrap: break-word;
+                .st-emotion-cache-1rsyhoq th {
                     text-align: left;
                 }
-                .st-emotion-cache-13ln4jf th:nth-child(1) { width: 1; }  /* 画像 */
-                .st-emotion-cache-13ln4jf th:nth-child(2) { width: 1; }  /* ショップ */
-                .st-emotion-cache-13ln4jf th:nth-child(3) { width: 1; }  /* 商品名 */
-                .st-emotion-cache-13ln4jf th:nth-child(4) { width: 1; }  /* 商品価格 */
-                .st-emotion-cache-13ln4jf th:nth-child(5) { width: 1; }  /* ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(6) { width: 1; }  /* 価格-ポイント */
-                .st-emotion-cache-13ln4jf th:nth-child(7) { width: 1; }  /* レビュー件数 */
                 </style>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
 
             # Streamlitで結果を表示
             st.write(df_result.to_html(escape=False, index=False), unsafe_allow_html=True)
