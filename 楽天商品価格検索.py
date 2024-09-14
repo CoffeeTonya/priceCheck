@@ -11,7 +11,7 @@ APP_ID = 1027604414937000350
 st.title('楽天市場 商品価格検索')
 
 # 機能選択
-selected_item = st.sidebar.radio('検索機能を選んでください', ['個別検索', 'csv検索', '価格更新'])
+selected_item = st.sidebar.radio('検索機能を選んでください', ['個別検索', 'csv検索', '価格更新ファイル作成'])
 st.sidebar.markdown("* * * ")
 
 
