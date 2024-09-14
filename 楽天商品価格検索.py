@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import requests
 import os
 import csv
@@ -226,12 +227,15 @@ if selected_item == 'csv検索':
 
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
+                # データ型を数値型に変換
+                df['仕入単価'] = pd.to_numeric(df['仕入単価'], errors='coerce')
 
-                # 最安時粗利額の計算: 税率区分に応じて仕入単価に係数をかける
-                if df_result['税率区分'] == '軽減税率':
-                    df_result['最安時粗利額'] = (round((df_result['商品価格'] / 1.08) - df_result['仕入単価'])).astype(int)
-                else:
-                    df_result['最安時粗利額'] = (round((df_result['商品価格'] / 1.1) - df_result['仕入単価'])).astype(int)
+                # 税率区分が課税なら1.1倍、そうでなければ1.08倍
+                df_result['最安時粗利額'] = np.where(
+                    df_result['税率区分'] == '課税',
+                    df_result['商品価格'] - (df_result['仕入単価'] * 1.1),
+                    df_result['商品価格'] - (df_result['仕入単価'] * 1.08)
+                )
 
                 df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'SALE終了', '仕入単価', '税率区分', '最安時粗利額']]
 
