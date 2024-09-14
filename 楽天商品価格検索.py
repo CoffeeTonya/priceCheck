@@ -145,8 +145,8 @@ else:
     st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
-    uploaded_file1 = st.sidebar.file_uploader("汎用明細表T9999", type="csv", key="csv1")
-    uploaded_file2 = st.sidebar.file_uploader("goods", type="csv", key="csv2")
+    uploaded_file1 = st.sidebar.file_uploader("汎用明細表のT9999をアップロード", type="csv", key="csv1")
+    uploaded_file2 = st.sidebar.file_uploader("ecbeingのgoodsをアップロード", type="csv", key="csv2")
     ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
 
     tax01 = st.sidebar.checkbox('軽減税率')
