@@ -224,10 +224,16 @@ if selected_item == 'csv検索':
                     lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
                     axis=1
                 )
-
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'SALE終了', '仕入単価', '税率区分名']]
+                # ポイント計算（税率区分名に基づいて計算）
+                df_result['最安時粗利額'] = df_result.apply(
+                    lambda row: round((row['商品価格'] / 1.08) - row['仕入単価']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) - row['仕入単価']),
+                    axis=1
+                )
+                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'SALE終了', '仕入単価', '税率区分名', '最安時粗利額']]
 
 
                 # 特定の条件に基づいて行に色を付ける関数
