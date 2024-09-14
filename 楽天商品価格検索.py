@@ -143,7 +143,7 @@ if selected_item == '個別検索':
 # ------------------------------------------------------------------------------------
 
 if selected_item == 'csv検索':
-    st.subheader('csvファイル内にある各商品の最安値を出力/最安が珈琲問屋は除く')
+    st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
     st.sidebar.markdown("* * * ")
@@ -367,8 +367,6 @@ if selected_item == 'csv検索':
                 def highlight_shop(row):
                     return ['background-color: #ffe0ef;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
                 
-                df_result = df_result[df_result['ショップ'] != 'FRESH ROASTER珈琲問屋 楽天市場店']
-
                 # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
                 styled_df = df_result.style.apply(highlight_shop, axis=1).format({
                     'レビュー平均点': "{:.2f}"
