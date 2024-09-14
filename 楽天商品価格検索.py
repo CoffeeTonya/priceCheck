@@ -153,7 +153,7 @@ else:
 
     # ファイルがアップロードされたか確認
     if uploaded_file1 is not None:
-        if uploaded_file2 is not None:
+        if uploaded_file2 is None:
             try:
                 # アップロードされたファイルをShift_JISで読み込み
                 df = pd.read_csv(uploaded_file1, encoding='utf-8')
