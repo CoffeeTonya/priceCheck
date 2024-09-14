@@ -220,7 +220,7 @@ if selected_item == 'csv検索':
                 )
 
                 # ポイント計算
-                if df_result['税率区分'] == '軽減税率':
+                if tax01:
                     df_result['ポイント数'] = (round((df_result['商品価格'] / 1.08) * 0.01 * df_result['P倍付'])).astype(int)
                 else:
                     df_result['ポイント数'] = (round((df_result['商品価格'] / 1.1) * 0.01 * df_result['P倍付'])).astype(int)
