@@ -164,7 +164,6 @@ else:
             for index, row in df.iterrows():
                 search_keyword = row[13]
                 minPrice = row[24]
-                maxPrice = row[38]
 
                 # 入力パラメータ
                 search_params = {
@@ -172,7 +171,6 @@ else:
                     "keyword": search_keyword,
                     "NGKeyword": ng_keyword,
                     "minPrice": minPrice,
-                    "maxPrice": maxPrice,
                     "applicationId": APP_ID,
                     "availability": 0,
                     "hits": 1,
