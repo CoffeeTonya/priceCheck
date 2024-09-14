@@ -363,10 +363,7 @@ if selected_item == 'csv検索':
 
                 df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', '仕入単価', '送料区分', '最安時粗利額']]
 
-
-                # 特定の条件に基づいて行に色を付ける関数
-                def highlight_shop(row):
-                    return ['background-color: #ffe0ef;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
+                df_result = df_result[df_result['ショップ'] != 'FRESH ROASTER珈琲問屋 楽天市場店']
 
                 # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
                 styled_df = df_result.style.apply(highlight_shop, axis=1).format({
