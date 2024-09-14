@@ -229,7 +229,7 @@ if selected_item == 'csv検索':
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
                 df_result['最安時粗利額'] = df_result.apply(
-                    lambda row: (row['商品価格'] - (row['仕入単価'] * 1.1)) if row['税率区分'] == '課税' else (row['商品価格'] - (row['仕入単価'] * 1.08)),
+                    lambda row: int(row['商品価格'] - (row['仕入単価'] * 1.1)) if row['税率区分'] == '課税' else int(row['商品価格'] - (row['仕入単価'] * 1.08)),
                     axis=1
                 )
 
