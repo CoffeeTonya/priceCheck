@@ -346,6 +346,8 @@ if selected_item == 'csv検索':
                     axis=1
                 )
 
+                df_result['仕入単価'] = df_result['仕入単価'].fillna(0).astype(int)
+
                 # ポイント計算（税率区分名に基づいて計算）
                 df_result['ポイント数'] = df_result.apply(
                     lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
