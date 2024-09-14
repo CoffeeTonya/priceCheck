@@ -287,7 +287,7 @@ if selected_item == 'csv検索':
             df1 = pd.read_csv(uploaded_file1, encoding='utf-8')
             df2 = pd.read_csv(uploaded_file2, encoding='shift-jis')
             df_merged = pd.merge(df1, df2, on='商品コード', how='inner')
-            df_merged = df_merged[['商品コード', '商品名', 'JANコード', '通販単価', '仕入単価']]
+            df_merged = df_merged[['商品コード', '商品名', 'JANコード', '通販単価', '仕入単価', '税率区分', '商品分類6名']]
 
             # 結果を格納するリスト
             item_list = []
@@ -297,6 +297,10 @@ if selected_item == 'csv検索':
                 search_keyword = row[2]
                 minPrice = int(row[4])
                 maxPrice = int(row[3])
+                product_code = row['商品コード']
+                purchase_cost = int(row['仕入単価']) 
+                tax_class = row['税率区分名'] 
+                ships_free = row['商品分類6名'] 
 
                 # 入力パラメータ
                 search_params = {
@@ -341,15 +345,21 @@ if selected_item == 'csv検索':
                 axis=1
             )
 
-            # ポイント計算
-            if tax01:
-                df_result['ポイント数'] = (round((df_result['商品価格'] / 1.08) * 0.01 * df_result['P倍付'])).astype(int)
-            else:
-                df_result['ポイント数'] = (round((df_result['商品価格'] / 1.1) * 0.01 * df_result['P倍付'])).astype(int)
-
+            # ポイント計算（税率区分名に基づいて計算）
+            df_result['ポイント数'] = df_result.apply(
+                lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
+                axis=1
+            )
             df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
-            df_result = df_result[['画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
+            # ポイント計算（税率区分名に基づいて計算）
+            df_result['最安時粗利額'] = df_result.apply(
+                lambda row: (row['商品価格'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['商品価格'] - round(row['仕入単価']*1.1)),
+                axis=1
+            )
+            df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+
+            df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', '仕入単価', '最安時粗利額', '送料区分']]
 
 
             # 特定の条件に基づいて行に色を付ける関数
@@ -361,6 +371,9 @@ if selected_item == 'csv検索':
                 'レビュー平均点': "{:.2f}"
             })
             
+            # インデックスをリセット
+            df = df.reset_index(drop=True)
+
             # カスタムCSSを定義
             st.markdown("""
                 <style>
@@ -390,9 +403,9 @@ if selected_item == 'csv検索':
             st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
 
-    else:
-        # ファイルがアップロードされていない場合のメッセージ
-        st.write("ファイル1をアップロードしてください")
+        except Exception as e:
+            # エラーメッセージを表示
+            st.error(f"csv1の読み込み中にエラーが発生しました: {e}")
 
 # ------------------------------------------------------------------------------------
 
