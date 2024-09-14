@@ -146,7 +146,7 @@ else:
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
     uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
-    ng_keyword = st.sidebar.text("検索ワード,除外ワード")
+    ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
 
     tax01 = st.sidebar.checkbox('軽減税率')
 
