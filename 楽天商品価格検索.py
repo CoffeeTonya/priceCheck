@@ -145,7 +145,8 @@ else:
     st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
-    uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
+    uploaded_file1 = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
+    uploaded_file2 = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
     st.sidebar.text("検索ワード,除外ワード")
 
     tax01 = st.sidebar.checkbox('軽減税率')
