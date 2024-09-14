@@ -143,7 +143,7 @@ if selected_item == '個別検索':
 # ------------------------------------------------------------------------------------
 
 if selected_item == 'csv検索':
-    st.subheader('csvファイル内にある各商品の最安値を出力')
+    st.subheader('csvファイル内にある各商品の最安値を出力/最安が珈琲問屋は除く')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
     st.sidebar.markdown("* * * ")
