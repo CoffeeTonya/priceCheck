@@ -288,7 +288,7 @@ if selected_item == 'csv検索':
                 df1 = pd.read_csv(uploaded_file1, encoding='utf-8')
                 df2 = pd.read_csv(uploaded_file2, encoding='shift-jis')
                 df_merged = pd.merge(df1, df2, on='商品コード', how='inner')
-                df_merged = df_merged[['商品コード', '商品名', 'JANコード', '通販単価', '仕入単価', '税率区分', '商品分類6名']]
+                df_merged = df_merged[['商品コード', '商品名', 'JANコード', '通販単価', '仕入単価', '税率区分名', '商品分類6名']]
 
                 # 結果を格納するリスト
                 item_list = []
