@@ -326,6 +326,10 @@ if selected_item == 'csv検索':
                         for key in item_key:
                             if key in item:
                                 tmp_item[key] = item[key]
+                        tmp_item['商品コード'] = product_code
+                        tmp_item['仕入単価'] = purchase_cost
+                        tmp_item['税率区分名'] = tax_class
+                        tmp_item['商品分類6名'] = ships_free
                         item_list.append(tmp_item.copy())
 
                 # 結果をDataFrameに変換
