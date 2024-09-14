@@ -154,7 +154,7 @@ else:
     if uploaded_file is not None:
         try:
             # アップロードされたファイルをShift_JISで読み込み
-            df = pd.read_csv(uploaded_file, encoding='shift_jis', header=None)
+            df = pd.read_csv(uploaded_file, encoding='cp932', header=None)
 
             # 結果を格納するリスト
             item_list = []
