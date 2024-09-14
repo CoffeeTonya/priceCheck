@@ -170,7 +170,7 @@ if selected_item == 'csv検索':
                     minPrice = int(row[38])
                     maxPrice = int(row[24])
                     product_code = row['商品コード'] 
-                    purchase_cost = row['仕入価格'] 
+                    purchase_cost = row['仕入単価'] 
                     tax_class = row['税率区分名'] 
                     
                     # 入力パラメータ
@@ -200,7 +200,7 @@ if selected_item == 'csv検索':
                             if key in item:
                                 tmp_item[key] = item[key]
                         tmp_item['商品コード'] = product_code
-                        tmp_item['仕入価格'] = purchase_cost
+                        tmp_item['仕入単価'] = purchase_cost
                         tmp_item['税率区分'] = tax_class
                         item_list.append(tmp_item.copy())
 
@@ -209,7 +209,7 @@ if selected_item == 'csv検索':
 
 
                 # カラムの順番と名前を変更
-                df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入価格', '税率区分'])
+                df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '税率区分'])
                 df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']
 
                 # 画像にリンクをつける
@@ -228,7 +228,7 @@ if selected_item == 'csv検索':
 
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了', '仕入価格', '税率区分']]
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了', '仕入単価', '税率区分']]
 
 
                 # 特定の条件に基づいて行に色を付ける関数
