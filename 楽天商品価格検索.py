@@ -147,7 +147,6 @@ if selected_item == 'csv検索':
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
     st.sidebar.markdown("* * * ")
-    tax01 = st.sidebar.checkbox('軽減税率')
 
     uploaded_file1 = st.sidebar.file_uploader("【csv1】汎用明細T9999：商品マスタ", type="csv", key="csv1")
     uploaded_file2 = st.sidebar.file_uploader("【csv2】goods：商品エクスポート", type="csv", key="csv2")
@@ -201,7 +200,7 @@ if selected_item == 'csv検索':
                                 tmp_item[key] = item[key]
                         tmp_item['商品コード'] = product_code
                         tmp_item['仕入単価'] = purchase_cost
-                        tmp_item['税率区分'] = tax_class
+                        tmp_item['税率区分名'] = tax_class
                         item_list.append(tmp_item.copy())
 
                 # 結果をDataFrameに変換
@@ -209,8 +208,8 @@ if selected_item == 'csv検索':
 
 
                 # カラムの順番と名前を変更
-                df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '税率区分'])
-                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '税率区分']
+                df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '税率区分名'])
+                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '税率区分名']
 
                 # 画像にリンクをつける
                 df_result['画像'] = df_result.apply(
@@ -221,14 +220,14 @@ if selected_item == 'csv検索':
                 )
 
                 # ポイント計算
-                if tax01:
+                if df_result['税率区分名'] == '軽減税率':
                     df_result['ポイント数'] = (round((df_result['商品価格'] / 1.08) * 0.01 * df_result['P倍付'])).astype(int)
                 else:
                     df_result['ポイント数'] = (round((df_result['商品価格'] / 1.1) * 0.01 * df_result['P倍付'])).astype(int)
 
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'SALE終了', '仕入単価', '税率区分']]
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'SALE終了', '仕入単価', '税率区分名']]
 
 
                 # 特定の条件に基づいて行に色を付ける関数
