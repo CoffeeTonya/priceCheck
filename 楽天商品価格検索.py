@@ -147,7 +147,7 @@ else:
 
     # ファイルのアップロードウィジェット
     uploaded_file1 = st.sidebar.file_uploader("CSVファイルをアップロード (ファイル1)", type="csv", key="file1")
-    uploaded_file2 = st.sidebar.file_uploader("CSVファイルをアップロード (ファイル2)", type="csv", key="file2")
+
     ng_keyword = st.sidebar.text("検索ワード,除外ワード")
 
     tax01 = st.sidebar.checkbox('軽減税率')
