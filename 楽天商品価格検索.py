@@ -148,7 +148,7 @@ else:
     # ファイルのアップロードウィジェット
     uploaded_file1 = st.sidebar.file_uploader("CSVファイルをアップロード (ファイル1)", type="csv", key="file1")
     uploaded_file2 = st.sidebar.file_uploader("CSVファイルをアップロード (ファイル2)", type="csv", key="file2")
-    st.sidebar.text("検索ワード,除外ワード")
+    ng_keyword = st.sidebar.text("検索ワード,除外ワード")
 
     tax01 = st.sidebar.checkbox('軽減税率')
 
@@ -163,8 +163,7 @@ else:
 
             # CSVの各行を処理する
             for index, row in df.iterrows():
-                search_keyword = row[0]
-                ng_keyword = row[1]
+                search_keyword = row[14]
 
                 # 入力パラメータ
                 search_params = {
