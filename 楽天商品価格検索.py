@@ -146,8 +146,11 @@ else:
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
     st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
+    st.sidebar.markdown("* * * ")
+
     uploaded_file1 = st.sidebar.file_uploader("【csv1】汎用明細T9999：商品マスタ", type="csv", key="csv1")
     uploaded_file2 = st.sidebar.file_uploader("【csv2】goods：商品エクスポート", type="csv", key="csv2")
+    st.sidebar.markdown("* * * ")
     ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
 
     tax01 = st.sidebar.checkbox('軽減税率')
