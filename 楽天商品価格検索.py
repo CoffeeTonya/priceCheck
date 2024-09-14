@@ -163,7 +163,7 @@ else:
             # CSVの各行を処理する
             for index, row in df.iterrows():
                 search_keyword = row[13]
-                minPrice = row[24]
+                minPrice = row[23]
                 
                 # 入力パラメータ
                 search_params = {
