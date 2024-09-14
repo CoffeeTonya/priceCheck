@@ -152,8 +152,6 @@ if selected_item == 'csv検索':
     st.sidebar.markdown("* * * ")
     ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
 
-    tax01 = st.sidebar.checkbox('軽減税率')
-
     # ファイルがアップロードされたか確認
     if uploaded_file1 is not None:
         if uploaded_file2 is None:
@@ -212,10 +210,6 @@ if selected_item == 'csv検索':
                 df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '税率区分'])
                 df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '税率区分']
 
-                # データ型を数値型に変換
-                df_result['商品価格'] = pd.to_numeric(df_result['商品価格'], errors='coerce')
-                df_result['仕入単価'] = pd.to_numeric(df_result['仕入単価'], errors='coerce')
-
                 # 画像にリンクをつける
                 df_result['画像'] = df_result.apply(
                     lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}"></a>' 
@@ -225,18 +219,19 @@ if selected_item == 'csv検索':
                 )
 
                 # ポイント計算
-                if tax01:
+                if df_result['税率区分'] == '軽減税率':
                     df_result['ポイント数'] = (round((df_result['商品価格'] / 1.08) * 0.01 * df_result['P倍付'])).astype(int)
                 else:
                     df_result['ポイント数'] = (round((df_result['商品価格'] / 1.1) * 0.01 * df_result['P倍付'])).astype(int)
 
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
+
                 # 最安時粗利額の計算: 税率区分に応じて仕入単価に係数をかける
-                df_result['最安時粗利額'] = df_result.apply(
-                    lambda row: row['商品価格'] - (row['仕入単価'] * 1.1) if row['税率区分'] == '課税' else row['商品価格'] - (row['仕入単価'] * 1.08),
-                    axis=1
-                )
+                if df_result['税率区分'] == '軽減税率':
+                    df_result['最安時粗利額'] = (round((df_result['商品価格'] / 1.08) - df_result['仕入単価'])).astype(int)
+                else:
+                    df_result['最安時粗利額'] = (round((df_result['商品価格'] / 1.1) - df_result['仕入単価'])).astype(int)
 
                 df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'SALE終了', '仕入単価', '税率区分', '最安時粗利額']]
 
