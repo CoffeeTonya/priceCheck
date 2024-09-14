@@ -207,6 +207,10 @@ if selected_item == 'csv検索':
                 # 結果をDataFrameに変換
                 df_result = pd.DataFrame(item_list)
 
+                # データ型を数値型に変換
+                df_result['商品価格'] = pd.to_numeric(df_result['商品価格'], errors='coerce')
+                df_result['仕入単価'] = pd.to_numeric(df_result['仕入単価'], errors='coerce')
+
 
                 # カラムの順番と名前を変更
                 df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '税率区分'])
