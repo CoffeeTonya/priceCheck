@@ -169,8 +169,8 @@ if selected_item == 'csv検索':
                     search_keyword = row[13]
                     minPrice = int(row[38])
                     maxPrice = int(row[24])
-                    product_code = row['商品コード'] 
-                    purchase_cost = row['仕入単価'] 
+                    product_code = row['商品コード']
+                    purchase_cost = int(row['仕入単価']) 
                     tax_class = row['税率区分名'] 
                     
                     # 入力パラメータ
