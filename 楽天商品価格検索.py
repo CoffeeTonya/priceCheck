@@ -246,9 +246,6 @@ if selected_item == 'csv検索':
                 styled_df = df_result.style.apply(highlight_shop, axis=1).format({
                     'レビュー平均点': "{:.2f}"
                 })
-                
-                # インデックスをリセット
-                df = df.reset_index(drop=True)
 
                 # カスタムCSSを定義
                 st.markdown("""
@@ -373,9 +370,6 @@ if selected_item == 'csv検索':
                 styled_df = df_result.style.apply(highlight_shop, axis=1).format({
                     'レビュー平均点': "{:.2f}"
                 })
-                
-                # インデックスをリセット
-                df = df.reset_index(drop=True)
 
                 # カスタムCSSを定義
                 st.markdown("""
