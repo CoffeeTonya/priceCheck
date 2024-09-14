@@ -158,7 +158,7 @@ if selected_item == 'csv検索':
         if uploaded_file2 is None:
             try:
                 # アップロードされたファイルをShift_JISで読み込み
-                df = pd.read_csv(uploaded_file1, encoding='cp932')
+                df = pd.read_csv(uploaded_file1, encoding='shift-jis')
 
                 # 結果を格納するリスト
                 item_list = []
