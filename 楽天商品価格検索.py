@@ -145,16 +145,17 @@ else:
     st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
-    uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
+    uploaded_file1 = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv", key="csv1")
+    uploaded_file2 = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv", key="csv2")
     ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
 
     tax01 = st.sidebar.checkbox('軽減税率')
 
     # ファイルがアップロードされたか確認
-    if uploaded_file is not None:
+    if uploaded_file1 is not None:
         try:
             # アップロードされたファイルをShift_JISで読み込み
-            df = pd.read_csv(uploaded_file, encoding='utf-8')
+            df = pd.read_csv(uploaded_file1, encoding='utf-8')
 
             # 結果を格納するリスト
             item_list = []
