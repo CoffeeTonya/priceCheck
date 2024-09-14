@@ -144,26 +144,25 @@ if selected_item == '個別検索':
 else:
     st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
-
     # ファイルのアップロードウィジェット
-    uploaded_file1 = st.sidebar.file_uploader("CSVファイルをアップロード (ファイル1)", type="csv", key="file1")
-    uploaded_file2 = st.sidebar.file_uploader("CSVファイルをアップロード (ファイル2)", type="csv", key="file2")
-    ng_keyword = st.sidebar.text("検索ワード,除外ワード")
+    uploaded_file = st.sidebar.file_uploader("CSVファイルをアップロード", type="csv")
+    st.sidebar.text("検索ワード,除外ワード")
 
     tax01 = st.sidebar.checkbox('軽減税率')
 
     # ファイルがアップロードされたか確認
-    if uploaded_file1 is not None:
+    if uploaded_file is not None:
         try:
             # アップロードされたファイルをShift_JISで読み込み
-            df = pd.read_csv(uploaded_file1, encoding='utf-8')
+            df = pd.read_csv(uploaded_file, encoding='utf-8', header=None)
 
             # 結果を格納するリスト
             item_list = []
 
             # CSVの各行を処理する
             for index, row in df.iterrows():
-                search_keyword = row[14]
+                search_keyword = row[0]
+                ng_keyword = row[1]
 
                 # 入力パラメータ
                 search_params = {
