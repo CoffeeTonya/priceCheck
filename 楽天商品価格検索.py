@@ -219,11 +219,11 @@ if selected_item == 'csv検索':
                     axis=1
                 )
 
-                # ポイント計算
-                if df_result['税率区分名'] == '軽減税率':
-                    df_result['ポイント数'] = (round((df_result['商品価格'] / 1.08) * 0.01 * df_result['P倍付'])).astype(int)
-                else:
-                    df_result['ポイント数'] = (round((df_result['商品価格'] / 1.1) * 0.01 * df_result['P倍付'])).astype(int)
+                # ポイント計算（税率区分名に基づいて計算）
+                df_result['ポイント数'] = df_result.apply(
+                    lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
+                    axis=1
+                )
 
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
 
