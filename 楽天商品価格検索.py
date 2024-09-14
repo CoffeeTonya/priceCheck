@@ -163,8 +163,8 @@ else:
             # CSVの各行を処理する
             for index, row in df.iterrows():
                 search_keyword = row[13]
-                minPrice = row[24].astype('int64')
-                maxPrice = row[38].astype('int64')
+                minPrice = int(row[24]) if not pd.isna(row[24]) else 0
+                maxPrice = int(row[38]) if not pd.isna(row[38]) else 999999
 
                 # 入力パラメータ
                 search_params = {
