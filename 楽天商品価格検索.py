@@ -207,14 +207,14 @@ if selected_item == 'csv検索':
                 # 結果をDataFrameに変換
                 df_result = pd.DataFrame(item_list)
 
-                # データ型を数値型に変換
-                df_result['商品価格'] = pd.to_numeric(df_result['商品価格'], errors='coerce')
-                df_result['仕入単価'] = pd.to_numeric(df_result['仕入単価'], errors='coerce')
-
 
                 # カラムの順番と名前を変更
                 df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '税率区分'])
                 df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '税率区分']
+
+                # データ型を数値型に変換
+                df_result['商品価格'] = pd.to_numeric(df_result['商品価格'], errors='coerce')
+                df_result['仕入単価'] = pd.to_numeric(df_result['仕入単価'], errors='coerce')
 
                 # 画像にリンクをつける
                 df_result['画像'] = df_result.apply(
