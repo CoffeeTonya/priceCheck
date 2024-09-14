@@ -344,9 +344,6 @@ else:
                 'レビュー平均点': "{:.2f}"
             })
             
-            # インデックスをリセット
-            df = df.reset_index(drop=True)
-
             # カスタムCSSを定義
             st.markdown("""
                 <style>
