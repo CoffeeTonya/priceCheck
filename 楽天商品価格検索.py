@@ -264,6 +264,9 @@ else:
         except Exception as e:
             # エラーメッセージを表示
             st.error(f"データの読み込み中にエラーが発生しました: {e}")
+
+    elif uploaded_file1 is not None:
+        st.write("ファイル2をアップロードしてください")
     else:
         # ファイルがアップロードされていない場合のメッセージ
         st.write("ファイルをアップロードしてください")
