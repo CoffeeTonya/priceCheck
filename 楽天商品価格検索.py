@@ -210,7 +210,7 @@ if selected_item == 'csv検索':
 
                 # カラムの順番と名前を変更
                 df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '税率区分'])
-                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']
+                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了', '仕入単価', '税率区分']
 
                 # 画像にリンクをつける
                 df_result['画像'] = df_result.apply(
