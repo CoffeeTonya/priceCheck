@@ -161,8 +161,8 @@ else:
 
             # CSVの各行を処理する
             for index, row in df.iterrows():
-                search_keyword = row[0]
-                ng_keyword = row[1]
+                search_keyword = row[14]
+                ng_keyword = '部品'
 
                 # 入力パラメータ
                 search_params = {
