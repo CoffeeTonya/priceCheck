@@ -144,7 +144,6 @@ if selected_item == '個別検索':
 if selected_item == 'csv検索':
     st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
-    # ファイルのアップロードウィジェット
     st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
     st.sidebar.markdown("* * * ")
 
@@ -170,6 +169,7 @@ if selected_item == 'csv検索':
                     search_keyword = row[13]
                     minPrice = int(row[38])
                     maxPrice = int(row[24])
+                    product_code = row['商品コード']  # 商品コードの列を追加
                     
                     # 入力パラメータ
                     search_params = {
@@ -197,6 +197,7 @@ if selected_item == 'csv検索':
                         for key in item_key:
                             if key in item:
                                 tmp_item[key] = item[key]
+                        tmp_item['商品コード'] = product_code  # 商品コードを追加
                         item_list.append(tmp_item.copy())
 
                 # 結果をDataFrameに変換
