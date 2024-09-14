@@ -145,7 +145,7 @@ else:
     st.subheader('csvファイル内にある各商品の最安値を出力')
     st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
     # ファイルのアップロードウィジェット
-    st.text('csv1のみでリスト内商品すべて / csv1&2でネット販売中品のみ')
+    st.sidebar.text('csv1:リスト内商品すべて検索 / csv1+2:販売中のみ検索 / csv2:検索不可')
     uploaded_file1 = st.sidebar.file_uploader("csv1:汎用明細T9999", type="csv", key="csv1")
     uploaded_file2 = st.sidebar.file_uploader("csv2:goods", type="csv", key="csv2")
     ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
