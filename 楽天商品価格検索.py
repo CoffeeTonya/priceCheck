@@ -117,6 +117,7 @@ if selected_item == '個別検索':
         st.markdown("""
             <style>
             /* 正しいクラスセレクタの記述 */
+                    
             .st-emotion-cache-13ln4jf {
                 max-width: none;
                 margin: 20px;
@@ -142,3 +143,295 @@ if selected_item == '個別検索':
         
         # Streamlitアプリ内でテーブルを表示
         st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+
+
+
+# ------------------------------------------------------------------------------------
+
+if selected_item == 'csv検索':
+    st.subheader('csvファイル内にある各商品の最安値を出力')
+    st.text('送料は商品個別で設定されている場合のみ（3,980円以上で送料無料の場合は送料別で取得される）')
+    st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
+    st.sidebar.markdown("* * * ")
+
+    uploaded_file1 = st.sidebar.file_uploader("【csv1】汎用明細T9999：商品マスタ", type="csv", key="csv1")
+    uploaded_file2 = st.sidebar.file_uploader("【csv2】goods：商品エクスポート", type="csv", key="csv2")
+    st.sidebar.markdown("* * * ")
+    ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
+
+    # ファイルがアップロードされたか確認
+    if uploaded_file1 is not None:
+        if uploaded_file2 is None:
+            try:
+                # アップロードされたファイルをShift_JISで読み込み
+                df = pd.read_csv(uploaded_file1, encoding='utf-8')
+
+                # 結果を格納するリスト
+                item_list = []
+
+                # CSVの各行を処理する
+                for index, row in df.iterrows():
+                    search_keyword = row[13]
+                    minPrice = int(row[38])
+                    maxPrice = int(row[24])
+                    product_code = row['商品コード']
+                    purchase_cost = int(row['仕入単価']) 
+                    web_price = int(row['通販単価']) 
+                    tax_class = row['税率区分名'] 
+                    ships_free = row['商品分類6名'] 
+                    
+                    # 入力パラメータ
+                    search_params = {
+                        "format": "json",
+                        "keyword": search_keyword,
+                        "NGKeyword": ng_keyword,
+                        "minPrice": minPrice,
+                        "maxPrice": maxPrice,
+                        "applicationId": APP_ID,
+                        "availability": 0,
+                        "hits": 1,
+                        "page": 1,
+                        'sort': '+itemPrice',
+                    }
+
+                    # リクエストを送信
+                    response = requests.get(REQUEST_URL, search_params)
+                    result = response.json()
+
+                    # 格納
+                    item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
+                    for i in range(len(result['Items'])):
+                        tmp_item = {}
+                        item = result['Items'][i]['Item']
+                        for key in item_key:
+                            if key in item:
+                                tmp_item[key] = item[key]
+                        tmp_item['商品コード'] = product_code
+                        tmp_item['仕入単価'] = purchase_cost
+                        tmp_item['通販単価'] = web_price
+                        tmp_item['税率区分名'] = tax_class
+                        tmp_item['商品分類6名'] = ships_free
+                        item_list.append(tmp_item.copy())
+
+                # 結果をDataFrameに変換
+                df_result = pd.DataFrame(item_list)
+
+
+                # カラムの順番と名前を変更
+                df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '通販単価', '税率区分名', '商品分類6名'])
+                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '通販単価', '税率区分名', '送料区分']
+
+                # 画像にリンクをつける
+                df_result['画像'] = df_result.apply(
+                    lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}" width="100"></a>' 
+                    if isinstance(row["画像"], list) and len(row["画像"]) > 0 and isinstance(row["画像"][0], dict) and "imageUrl" in row["画像"][0] 
+                    else '',
+                    axis=1
+                )
+
+                # 商品名にリンクをつける
+                df_result['商品名'] = df_result.apply(
+                    lambda row: f'<a href="{row["URL"]}" target="_blank">{row["商品名"]}</a>',
+                    axis=1
+                )
+
+                # ポイント計算（税率区分名に基づいて計算）
+                df_result['ポイント数'] = df_result.apply(
+                    lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
+                    axis=1
+                )
+                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+
+                # ポイント計算（税率区分名に基づいて計算）
+                df_result['最安時粗利額'] = df_result.apply(
+                    lambda row: (row['商品価格'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['商品価格'] - round(row['仕入単価']*1.1)),
+                    axis=1
+                )
+                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+                df_result['価格差'] = df_result['通販単価'] - df_result['商品価格']
+
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', '仕入単価', '通販単価', '価格差', '最安時粗利額', '送料区分']]
+
+
+                # 特定の条件に基づいて行に色を付ける関数
+                def highlight_shop(row):
+                    return ['background-color: #ffe0ef;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
+
+                # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
+                styled_df = df_result.style.apply(highlight_shop, axis=1).format({
+                    'レビュー平均点': "{:.2f}"
+                })
+
+                # カスタムCSSを定義
+                st.markdown("""
+                    <style>
+                    /* 正しいクラスセレクタの記述 */
+                    .st-emotion-cache-13ln4jf {
+                        max-width: none;
+                        margin: 20px;
+                        font-size: 14px;
+                    }
+                    .st-emotion-cache-1rsyhoq th {
+                        text-align: left;
+                    }
+                    </style>
+                    """, unsafe_allow_html=True)
+
+                # CSVファイルとしてデータを出力するボタン
+                csv = df_result.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
+
+                st.download_button(
+                    label="CSVファイルとしてダウンロード",
+                    data=csv,
+                    file_name='楽天市場検索結果.csv',
+                    mime='text/csv',
+                )
+
+                # Streamlitで結果を表示
+                st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+
+
+            except Exception as e:
+                # エラーメッセージを表示
+                st.error(f"csv1の読み込み中にエラーが発生しました: {e}")
+        
+        else:
+            try:
+                df1 = pd.read_csv(uploaded_file1, encoding='utf-8')
+                df2 = pd.read_csv(uploaded_file2, encoding='cp932')
+                df_merged = pd.merge(df1, df2, on='商品コード', how='inner')
+                df_merged = df_merged[['商品コード', '商品名', 'JANコード', '通販単価', '仕入単価', '税率区分名', '商品分類6名']]
+
+                # 結果を格納するリスト
+                item_list = []
+
+                # CSVの各行を処理する
+                for index, row in df_merged.iterrows():
+                    search_keyword = row[2]
+                    minPrice = int(row[4])
+                    maxPrice = int(row[3])
+                    product_code = row['商品コード']
+                    purchase_cost = int(row['仕入単価']) 
+                    web_price = int(row['通販単価']) 
+                    tax_class = row['税率区分名'] 
+                    ships_free = row['商品分類6名'] 
+
+                    # 入力パラメータ
+                    search_params = {
+                        "format": "json",
+                        "keyword": search_keyword,
+                        "NGKeyword": ng_keyword,
+                        "minPrice": minPrice,
+                        "maxPrice": maxPrice,
+                        "applicationId": APP_ID,
+                        "availability": 0,
+                        "hits": 1,
+                        "page": 1,
+                        'sort': '+itemPrice',
+                    }
+
+                    # リクエストを送信
+                    response = requests.get(REQUEST_URL, search_params)
+                    result = response.json()
+
+                    # 格納
+                    item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
+                    for i in range(len(result['Items'])):
+                        tmp_item = {}
+                        item = result['Items'][i]['Item']
+                        for key in item_key:
+                            if key in item:
+                                tmp_item[key] = item[key]
+                        tmp_item['商品コード'] = product_code
+                        tmp_item['仕入単価'] = purchase_cost
+                        tmp_item['通販単価'] = web_price
+                        tmp_item['税率区分名'] = tax_class
+                        tmp_item['商品分類6名'] = ships_free
+                        item_list.append(tmp_item.copy())
+
+                # 結果をDataFrameに変換
+                df_result = pd.DataFrame(item_list)
+
+                # カラムの順番と名前を変更
+                df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '通販単価', '税率区分名', '商品分類6名'])
+                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '通販単価', '税率区分名', '送料区分']
+
+                # 画像にリンクをつける
+                df_result['画像'] = df_result.apply(
+                    lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}" width="100"></a>' 
+                    if isinstance(row["画像"], list) and len(row["画像"]) > 0 and isinstance(row["画像"][0], dict) and "imageUrl" in row["画像"][0] 
+                    else '',
+                    axis=1
+                )
+
+                # 商品名にリンクをつける
+                df_result['商品名'] = df_result.apply(
+                    lambda row: f'<a href="{row["URL"]}" target="_blank">{row["商品名"]}</a>',
+                    axis=1
+                )
+
+                # ポイント計算（税率区分名に基づいて計算）
+                df_result['ポイント数'] = df_result.apply(
+                    lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
+                    axis=1
+                )
+                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+
+                # ポイント計算（税率区分名に基づいて計算）
+                df_result['最安時粗利額'] = df_result.apply(
+                    lambda row: (row['商品価格'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['商品価格'] - round(row['仕入単価']*1.1)),
+                    axis=1
+                )
+                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+                df_result['価格差'] = df_result['通販単価'] - df_result['商品価格']
+
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', '仕入単価', '通販単価', '価格差', '送料区分', '最安時粗利額']]
+
+                # 特定の条件に基づいて行に色を付ける関数
+                def highlight_shop(row):
+                    return ['background-color: #ffe0ef;' if row['ショップ'] == 'FRESH ROASTER珈琲問屋 楽天市場店' else '' for _ in row]
+                
+                # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
+                styled_df = df_result.style.apply(highlight_shop, axis=1).format({
+                    'レビュー平均点': "{:.2f}"
+                })
+
+                # カスタムCSSを定義
+                st.markdown("""
+                    <style>
+                    /* 正しいクラスセレクタの記述 */
+                    .st-emotion-cache-13ln4jf {
+                        max-width: none;
+                        margin: 20px;
+                        font-size: 14px;
+                    }
+                    .st-emotion-cache-1rsyhoq th {
+                        text-align: left;
+                    }
+                    </style>
+                    """, unsafe_allow_html=True)
+
+                # CSVファイルとしてデータを出力するボタン
+                csv = df_result.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
+
+                st.download_button(
+                    label="CSVファイルとしてダウンロード",
+                    data=csv,
+                    file_name='楽天市場検索結果.csv',
+                    mime='text/csv',
+                )
+
+                # Streamlitで結果を表示
+                st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+
+
+            except Exception as e:
+                # エラーメッセージを表示
+                st.error(f"csv1の読み込み中にエラーが発生しました: {e}")
+
+# ------------------------------------------------------------------------------------
+
+if selected_item == '価格更新ファイル作成':
+    st.subheader('価格更新用のcsvファイルを作成')
+
+    uploaded_file3 = st.sidebar.file_uploader("csv検索でダウンロードしたファイル", type="csv", key="csv3")
