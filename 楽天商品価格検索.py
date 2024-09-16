@@ -87,7 +87,10 @@ if selected_item == '個別検索':
 
         # 商品名にリンクをつける
         df['商品名'] = df.apply(
-            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["画像"][0]["imageUrl"]}"></a>', axis=1
+            lambda row: f'<a href="{row["URL"]}" target="_blank"><img src="{row["商品名"][0]["imageUrl"]}"></a>' 
+            if isinstance(row["商品名"], list) and len(row["商品名"]) > 0 and isinstance(row["商品名"][0], dict) and "imageUrl" in row["商品名"][0] 
+            else '',
+            axis=1
         )
 
         # ポイント計算
