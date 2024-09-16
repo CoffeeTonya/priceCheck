@@ -229,6 +229,12 @@ if selected_item == 'csv検索':
                     axis=1
                 )
 
+                # 商品名にリンクをつける
+                df_result['商品名'] = df_result.apply(
+                    lambda row: f'<a href="{row["URL"]}" target="_blank">{row["商品名"]}></a>',
+                    axis=1
+                )
+
                 # ポイント計算（税率区分名に基づいて計算）
                 df_result['ポイント数'] = df_result.apply(
                     lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
@@ -404,7 +410,7 @@ if selected_item == 'csv検索':
 
                 st.download_button(
                     label="CSVファイルとしてダウンロード",
-                    data=csv,
+                    data=csv,　
                     file_name='楽天市場検索結果.csv',
                     mime='text/csv',
                 )
