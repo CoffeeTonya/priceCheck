@@ -87,10 +87,9 @@ if selected_item == '個別検索':
 
         # 商品名にリンクをつける
         df['商品名'] = df.apply(
-            lambda row: f'<a href="{row["URL"]}" target="_blank">{row["商品名"]}"></a>',
+            lambda row: f'<a href="{row["URL"]}" target="_blank">{row["商品名"]}</a>',
             axis=1
         )
-        
 
         # ポイント計算
         if tax01:
