@@ -413,7 +413,7 @@ if selected_item == 'csv検索':
 
 # ------------------------------------------------------------------------------------
 
-else:
+if selected_item == '価格更新ファイル作成':
     st.subheader('価格更新用のcsvファイルを作成')
 
     uploaded_file3 = st.sidebar.file_uploader("csv検索でダウンロードしたファイル", type="csv", key="csv3")
