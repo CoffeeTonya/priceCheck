@@ -477,7 +477,7 @@ if selected_item == '価格更新ファイル作成':
                 df01 = pd.concat([df01, pd.DataFrame([duplicated_row])], ignore_index=True)
 
             # 商品管理番号（商品URL）で並び替え
-            df01_sorted = df01.sort_values(by='商品管理番号（商品URL）')
+            df01_sorted = df01.sort_values(by=['商品管理番号（商品URL）', '商品番号'])
 
             # 販売価格に値が入っている場合、商品番号をNaNにする
             df01_sorted.loc[df01_sorted['販売価格'].notna(), '商品番号'] = np.nan
