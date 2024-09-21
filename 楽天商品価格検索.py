@@ -482,7 +482,6 @@ if selected_item == '価格更新ファイル作成':
 
             # 販売価格に値が入っている場合、商品番号をNaNにする
             df01_sorted.loc[df01_sorted['販売価格'].notna(), '商品番号'] = np.nan
-
             df_rakuten = df01_sorted[['商品管理番号（商品URL）', '商品番号', 'SKU管理番号', 'システム連携用SKU番号', 'バリエーション項目キー1', 'バリエーション項目キー2', 'バリエーション項目選択肢1', 'バリエーション項目選択肢2', '販売価格', '表示価格', '二重価格文言管理番号']]
 
             # CSVファイルとしてデータを出力するボタン
@@ -491,13 +490,9 @@ if selected_item == '価格更新ファイル作成':
             st.download_button(
                 label="CSVファイルとしてダウンロード",
                 data=csv_rakuten,  # ここを修正: csv_rakutenに変更
-                file_name='楽天市場検索結果.csv',
+                file_name='楽天アップロード用.csv',
                 mime='text/csv',
             )
-
-            # Streamlitで結果を表示（スタイリングが必要であれば適用）
-            styled_df = df_rakuten.style.format(na_rep="")  # 適切にスタイリングする
-            st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
         except Exception as e:
             # エラーメッセージを表示
