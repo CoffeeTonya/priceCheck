@@ -27,7 +27,7 @@ if selected_item == '個別検索':
         (0, 1)
     )
     st.sidebar.text('※スペースで複数ワード検索可')
-    ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
+    ng_keyword = st.sidebar.text_input('除外ワード', value="部品 中古")
     hits = st.sidebar.number_input('検索数（30まで）', min_value=1, max_value=30, value=10, step=1)
     minPrice = st.sidebar.number_input('最小金額', value=1)
     maxPrice = st.sidebar.number_input('最大金額', value=999999)
@@ -158,7 +158,7 @@ if selected_item == 'csv検索':
     uploaded_file1 = st.sidebar.file_uploader("【csv1】汎用明細T9999：商品マスタ", type="csv", key="csv1")
     uploaded_file2 = st.sidebar.file_uploader("【csv2】goods：商品エクスポート", type="csv", key="csv2")
     st.sidebar.markdown("* * * ")
-    ng_keyword = st.sidebar.text_input('除外ワード', value="部品")
+    ng_keyword = st.sidebar.text_input('除外ワード', value="部品 中古")
 
     # ファイルがアップロードされたか確認
     if uploaded_file1 is not None:
