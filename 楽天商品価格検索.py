@@ -439,11 +439,10 @@ if selected_item == '価格更新ファイル作成':
     # ファイルがアップロードされたか確認
     if uploaded_file3 is not None:
         try:
-            # アップロードされたファイルをShift_JISで読み込み
-            df01 = pd.read_csv(uploaded_file3, encoding='utf-8')
+            df00 = pd.read_csv(uploaded_file3, encoding='utf-8')
 
-            # 商品コードはint型、商品価格はfloat型に変換
-            df01 = df01[['商品コード', '商品価格', '通販単価']]
+            # 楽天用データの作成
+            df01 = df00[['商品コード', '商品価格', '通販単価']]
             df01 = df01.rename(columns={'商品コード': '商品管理番号（商品URL）', '商品価格': '販売価格'})
 
             # 商品番号関連の列を文字列型に変換
@@ -488,14 +487,32 @@ if selected_item == '価格更新ファイル作成':
             csv_rakuten = df_rakuten.to_csv(index=False, encoding='shift-jis').encode('utf-8-sig')
 
             st.download_button(
-                label="CSVファイルとしてダウンロード",
-                data=csv_rakuten,  # ここを修正: csv_rakutenに変更
+                label="楽天用CSVファイルをダウンロード",
+                data=csv_rakuten,
                 file_name='楽天アップロード用.csv',
                 mime='text/csv',
             )
 
             # Streamlitで結果を表示（スタイリングが必要であれば適用）
             st.write('csvファイルを出力してください')
+
+            # Yahoo用データの作成
+            df02 = df00[['商品コード', '通販単価', '商品価格']]
+            df02 = df02.rename(columns={'商品コード': 'code', '通販単価': 'original-price', '商品価格': 'price'})
+
+            # 販売価格をstr型に変換（int型だとNaNを入れられないため）
+            df02['original-price'] = df02['original-price'].astype(str)
+            df02['price'] = df02['price'].astype(str)
+
+            # CSVファイルとしてデータを出力するボタン
+            csv_yahoo = df02.to_csv(index=False, encoding='shift-jis').encode('utf-8-sig')
+
+            st.download_button(
+                label="Yahoo用CSVファイルをダウンロード",
+                data=csv_yahoo,
+                file_name='Yahooアップロード用.csv',
+                mime='text/csv',
+            )
 
         except Exception as e:
             # エラーメッセージを表示
