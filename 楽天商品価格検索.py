@@ -494,6 +494,9 @@ if selected_item == '価格更新ファイル作成':
                 mime='text/csv',
             )
 
+            # Streamlitで結果を表示（スタイリングが必要であれば適用）
+            st.write('csvファイルを出力してください')
+
         except Exception as e:
             # エラーメッセージを表示
             st.error(f"csv1の読み込み中にエラーが発生しました: {e}")
