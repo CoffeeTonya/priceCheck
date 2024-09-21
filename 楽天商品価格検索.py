@@ -435,3 +435,69 @@ if selected_item == '価格更新ファイル作成':
     st.subheader('価格更新用のcsvファイルを作成')
 
     uploaded_file3 = st.sidebar.file_uploader("csv検索でダウンロードしたファイル", type="csv", key="csv3")
+
+    # ファイルがアップロードされたか確認
+    if uploaded_file3 is not None:
+        try:
+            # アップロードされたファイルをShift_JISで読み込み
+            df01 = pd.read_csv(uploaded_file3, encoding='utf-8')
+    
+            # 商品コードはint型、商品価格はfloat型に変換
+            df01 = df01[['商品コード', '商品価格', '通販単価']]
+            df01 = df01.rename(columns={'商品コード': '商品管理番号（商品URL）', '商品価格': '販売価格'})
+
+            # 商品番号関連の列を文字列型に変換
+            df01['商品番号'] = df01['商品管理番号（商品URL）'].astype(str)
+            df01['SKU管理番号'] = df01['商品管理番号（商品URL）'].astype(str)
+            df01['システム連携用SKU番号'] = df01['商品管理番号（商品URL）'].astype(str)
+
+            # 販売価格をstr型に変換（int型だとNaNを入れられないため）
+            df01['販売価格'] = df01['販売価格'].astype(str)
+            df01['表示価格'] = df01['通販単価'].astype(str)
+
+            # 新しい列を追加して、値を入れない（NaNに設定）
+            df01['バリエーション項目キー1'] = np.nan
+            df01['バリエーション項目キー2'] = np.nan
+            df01['バリエーション項目選択肢1'] = np.nan
+            df01['バリエーション項目選択肢2'] = np.nan
+            df01['二重価格文言管理番号'] = str(1)
+
+            # 行を複製し、元の行の販売価格、SKU関連の値を削除（NaNに変更）
+            for i in range(0, len(df01)):
+                # 複製する行をコピー
+                duplicated_row = df01.loc[i].copy()
+
+                # 元のデータの「販売価格」とSKU関連番号をNaNにする
+                df01.loc[i, '販売価格'] = np.nan
+                df01.loc[i, '表示価格'] = np.nan
+                df01.loc[i, 'SKU管理番号'] = np.nan
+                df01.loc[i, 'システム連携用SKU番号'] = np.nan
+                df01.loc[i, '二重価格文言管理番号'] = np.nan
+
+                # 複製した行をデータフレームに追加（複製行は元の値を保持）
+                df01 = pd.concat([df01, pd.DataFrame([duplicated_row])], ignore_index=True)
+
+            # 商品管理番号（商品URL）で並び替え
+            df01_sorted = df01.sort_values(by='商品管理番号（商品URL）')
+
+            # 販売価格に値が入っている場合、商品番号をNaNにする
+            df01_sorted.loc[df01_sorted['販売価格'].notna(), '商品番号'] = np.nan
+
+            df_rakuten = df01_sorted[['商品管理番号（商品URL）', '商品番号', 'SKU管理番号', 'システム連携用SKU番号', 'バリエーション項目キー1', 'バリエーション項目キー2', 'バリエーション項目選択肢1', 'バリエーション項目選択肢2', '販売価格', '表示価格', '二重価格文言管理番号']]
+
+            # CSVファイルとしてデータを出力するボタン
+            csv_rakuten = df_rakuten.to_csv(index=False, encoding='shift-jis').encode('utf-8-sig')
+
+            st.download_button(
+                label="CSVファイルとしてダウンロード",
+                data=csv,
+                file_name='楽天市場検索結果.csv',
+                mime='text/csv',
+            )
+
+            # Streamlitで結果を表示
+            st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+
+        except Exception as e:
+            # エラーメッセージを表示
+            st.error(f"csv1の読み込み中にエラーが発生しました: {e}")
