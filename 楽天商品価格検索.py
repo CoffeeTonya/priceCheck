@@ -441,7 +441,7 @@ if selected_item == '価格更新ファイル作成':
         try:
             # アップロードされたファイルをShift_JISで読み込み
             df01 = pd.read_csv(uploaded_file3, encoding='utf-8')
-    
+
             # 商品コードはint型、商品価格はfloat型に変換
             df01 = df01[['商品コード', '商品価格', '通販単価']]
             df01 = df01.rename(columns={'商品コード': '商品管理番号（商品URL）', '商品価格': '販売価格'})
@@ -490,12 +490,13 @@ if selected_item == '価格更新ファイル作成':
 
             st.download_button(
                 label="CSVファイルとしてダウンロード",
-                data=csv,
+                data=csv_rakuten,  # ここを修正: csv_rakutenに変更
                 file_name='楽天市場検索結果.csv',
                 mime='text/csv',
             )
 
-            # Streamlitで結果を表示
+            # Streamlitで結果を表示（スタイリングが必要であれば適用）
+            styled_df = df_rakuten.style.format(na_rep="")  # 適切にスタイリングする
             st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
         except Exception as e:
