@@ -250,7 +250,7 @@ if selected_item == 'csv検索':
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
                 df_result['価格差'] = df_result['通販単価'] - df_result['商品価格']
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', '仕入単価', '通販単価', '価格差', '最安時粗利額', '送料区分']]
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', '仕入単価', '通販単価', '価格差', '最安時粗利額', '送料区分', '税率区分']]
 
 
                 # 特定の条件に基づいて行に色を付ける関数
@@ -424,7 +424,6 @@ if selected_item == 'csv検索':
                 # Streamlitで結果を表示
                 st.write(styled_df.to_html(escape=False, index=False), unsafe_allow_html=True)
 
-
             except Exception as e:
                 # エラーメッセージを表示
                 st.error(f"csv1の読み込み中にエラーが発生しました: {e}")
@@ -493,9 +492,6 @@ if selected_item == '価格更新ファイル作成':
                 mime='text/csv',
             )
 
-            # Streamlitで結果を表示（スタイリングが必要であれば適用）
-            st.write('csvファイルを出力してください')
-
             # Yahoo用データの作成
             df02 = df00[['商品コード', '通販単価', '商品価格']]
             df02 = df02.rename(columns={'商品コード': 'code', '通販単価': 'original-price', '商品価格': 'price'})
@@ -513,6 +509,10 @@ if selected_item == '価格更新ファイル作成':
                 file_name='Yahooアップロード用.csv',
                 mime='text/csv',
             )
+
+
+            # Streamlitで結果を表示（スタイリングが必要であれば適用）
+            st.write('csvファイルを出力できます')
 
         except Exception as e:
             # エラーメッセージを表示
