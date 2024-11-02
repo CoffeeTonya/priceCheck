@@ -248,8 +248,8 @@ if selected_item == 'csv検索':
                     lambda row: (row['商品価格'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['商品価格'] - round(row['仕入単価']*1.1)),
                     axis=1
                 )
-                df_result['最安時粗利率(%)'] = df_result.apply(
-                    lambda row: int((1 - (row['仕入単価'] * 1.08) / row['商品価格']) * 100) if row['税率区分名'] == '軽減税率' else int((1 - (row['仕入単価'] * 1.1) / row['商品価格']) * 100),
+                df_result['最安時粗利率'] = df_result.apply(
+                    lambda row: int((1 - (row['仕入単価'] * 1.08) / row['商品価格'])) if row['税率区分名'] == '軽減税率' else int((1 - (row['仕入単価'] * 1.1) / row['商品価格'])),
                     axis=1
                 )
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
@@ -260,11 +260,11 @@ if selected_item == 'csv検索':
                     axis=1
                 )
                 df_result['変更後粗利率(%)'] = df.apply(
-                    lambda row: f"=ROUNDDOWN(IF(L{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/F{row.name + 2}), (1-(H{row.name + 2})*1.08/F{row.name + 2})),2)*100",
+                    lambda row: f"=ROUNDDOWN(IF(L{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/F{row.name + 2}), (1-(H{row.name + 2})*1.08/F{row.name + 2})),2)",
                     axis=1
                 )
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '変更価格', '送料', '仕入単価', '通販単価', '価格差', '送料区分', '税率区分名', '最安時粗利額', '最安時粗利率(%)', '変更後粗利額', '変更後粗利率(%)']]
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '変更価格', '送料', '仕入単価', '通販単価', '価格差', '送料区分', '税率区分名', '最安時粗利額', '最安時粗利率', '変更後粗利額', '変更後粗利率']]
 
 
                 # 特定の条件に基づいて行に色を付ける関数
@@ -396,8 +396,8 @@ if selected_item == 'csv検索':
                     lambda row: (row['商品価格'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['商品価格'] - round(row['仕入単価']*1.1)),
                     axis=1
                 )
-                df_result['最安時粗利率(%)'] = df_result.apply(
-                    lambda row: int((1 - (row['仕入単価'] * 1.08) / row['商品価格']) * 100) if row['税率区分名'] == '軽減税率' else int((1 - (row['仕入単価'] * 1.1) / row['商品価格']) * 100),
+                df_result['最安時粗利率'] = df_result.apply(
+                    lambda row: int((1 - (row['仕入単価'] * 1.08) / row['商品価格'])) if row['税率区分名'] == '軽減税率' else int((1 - (row['仕入単価'] * 1.1) / row['商品価格'])),
                     axis=1
                 )
                 df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
@@ -408,11 +408,11 @@ if selected_item == 'csv検索':
                     axis=1
                 )
                 df_result['変更後粗利率'] = df.apply(
-                    lambda row: f"=ROUNDDOWN(IF(L{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/F{row.name + 2}), (1-(H{row.name + 2})*1.08/F{row.name + 2})),2)*100",
+                    lambda row: f"=ROUNDDOWN(IF(L{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/F{row.name + 2}), (1-(H{row.name + 2})*1.08/F{row.name + 2})),2)",
                     axis=1
                 )
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '変更価格', '送料', '仕入単価', '通販単価', '価格差', '送料区分', '税率区分名', '最安時粗利額', '最安時粗利率(%)', '変更後粗利額', '変更後粗利率']]
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '変更価格', '送料', '仕入単価', '通販単価', '価格差', '送料区分', '税率区分名', '最安時粗利額', '最安時粗利率', '変更後粗利額', '変更後粗利率']]
 
                 # 特定の条件に基づいて行に色を付ける関数
                 def highlight_shop(row):
