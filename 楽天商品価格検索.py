@@ -259,7 +259,7 @@ if selected_item == 'csv検索':
                     lambda row: f"=IF(L{row.name + 2}=\"課税\", F{row.name + 2} - H{row.name + 2}*1.1, F{row.name + 2} - H{row.name + 2}*1.08)",
                     axis=1
                 )
-                df_result['変更後粗利率(%)'] = df.apply(
+                df_result['変更後粗利率'] = df.apply(
                     lambda row: f"=ROUNDDOWN(IF(L{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/F{row.name + 2}), (1-(H{row.name + 2})*1.08/F{row.name + 2})),2)",
                     axis=1
                 )
