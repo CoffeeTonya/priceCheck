@@ -174,7 +174,7 @@ if selected_item == 'csv検索':
                 for index, row in df.iterrows():
                     search_keyword = row['JANコード']
                     minPrice = int(row['仕入単価'])
-                    maxPrice = int(row['通販単価'])
+                    maxPrice = int(row['通販単価']*1.5)
                     product_code = row['商品コード']
                     purchase_cost = int(row['仕入単価']) 
                     web_price = int(row['通販単価']) 
@@ -323,7 +323,7 @@ if selected_item == 'csv検索':
                 for index, row in df_merged.iterrows():
                     search_keyword = row['JANコード']
                     minPrice = int(row['仕入単価'])
-                    maxPrice = int(row['通販単価'])
+                    maxPrice = int(row['通販単価']*1.5)
                     product_code = row['商品コード']
                     purchase_cost = int(row['仕入単価']) 
                     web_price = int(row['通販単価']) 
