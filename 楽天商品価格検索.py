@@ -171,9 +171,8 @@ if selected_item == 'csv検索':
 
     # 表形式で出力
     for i in range(len(price_data["粗利率"])):
-        st.write(price_data['粗利率'][i])
-        st.write(price_data['価格設定'][i])
-        st.markdown("---") 
+        st.markdown(price_data['粗利率'][i])
+        st.markdown(price_data['価格設定'][i])
 
     st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
     st.sidebar.markdown("* * * ")
