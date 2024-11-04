@@ -383,7 +383,7 @@ if selected_item == 'csv検索':
                         tmp_item['商品分類6名'] = ships_free
                         item_list.append(tmp_item.copy())
 
-                # 結果をDataFrameに変換通販単価
+                # 結果をDataFrameに変換
                 df_result = pd.DataFrame(item_list)
 
                 # カラムの順番と名前を変更
