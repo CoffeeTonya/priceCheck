@@ -439,12 +439,12 @@ if selected_item == 'csv検索':
                 )
 
                 df_result['変更価格'] = ''
-                df_result['変更後粗利額'] = df.apply(
+                df_result['変更後粗利額'] = df_result.apply(
                     lambda row: f"=IF(G{row.name + 2}=\"課税\", O{row.name + 2} - H{row.name + 2}*1.1, O{row.name + 2} - H{row.name + 2}*1.08)",
                     axis=1
                 )
 
-                df_result['変更後粗利率'] = df.apply(
+                df_result['変更後粗利率'] = df_result.apply(
                     lambda row: f"=ROUNDDOWN(IF(G{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/O{row.name + 2}), (1-(H{row.name + 2})*1.08/O{row.name + 2})),2)",
                     axis=1
                 )
