@@ -170,11 +170,8 @@ if selected_item == 'csv検索':
         ]
     }
 
-    # DataFrameを作成
-    price_ = pd.DataFrame(price_data)
-
     # Streamlitで表示
-    st.table(price_)
+    st.table(price_data)
 
     st.sidebar.markdown('csv1: リスト内商品すべて検索<br>csv1&2: 販売中のみ検索<br>csv2: 検索不可', unsafe_allow_html=True)
     st.sidebar.markdown("* * * ")
