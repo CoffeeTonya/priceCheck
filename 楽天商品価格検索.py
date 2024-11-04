@@ -5,11 +5,12 @@ import requests
 import os
 import csv
 from datetime import datetime
+import math
 
 REQUEST_URL = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706"
 APP_ID = 1027604414937000350
 
-st.title('楽天市場 商品価格検索')
+st.title('楽天市場 最安値価格検索')
 
 # 機能選択
 selected_item = st.sidebar.radio('検索機能を選んでください', ['個別検索', 'csv検索', '価格更新ファイル作成'])
@@ -76,7 +77,7 @@ if selected_item == '個別検索':
 
         # カラムの順番と名前を変更
         df = df.reindex(columns=['mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'reviewCount', 'reviewAverage', 'endTime'])
-        df.columns = ['画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']
+        df.columns = ['画像', 'ショップ', '商品名', 'URL', '最安値', 'P倍付', '送料', 'レビュー件数', 'レビュー平均点', 'SALE終了']
 
         # 画像にリンクをつける
         df['画像'] = df.apply(
@@ -94,13 +95,13 @@ if selected_item == '個別検索':
 
         # ポイント計算
         if tax01:
-            df['ポイント数'] = (round((df['商品価格'] / 1.08) * 0.01 * df['P倍付'])).astype(int)
+            df['ポイント数'] = (round((df['最安値'] / 1.08) * 0.01 * df['P倍付'])).astype(int)
         else:
-            df['ポイント数'] = (round((df['商品価格'] / 1.1) * 0.01 * df['P倍付'])).astype(int)
+            df['ポイント数'] = (round((df['最安値'] / 1.1) * 0.01 * df['P倍付'])).astype(int)
 
-        df['価格-ポイント'] = df['商品価格'] - df['ポイント数']
+        df['価格-ポイント'] = df['最安値'] - df['ポイント数']
 
-        df = df[['画像', 'ショップ', '商品名', '商品価格', '送料', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
+        df = df[['画像', 'ショップ', '商品名', '最安値', '送料', 'ポイント数', '価格-ポイント', 'レビュー件数', 'レビュー平均点', 'SALE終了']]
 
         # 特定の条件に基づいて行に色を付ける関数
         def highlight_shop(row):
@@ -130,7 +131,7 @@ if selected_item == '個別検索':
             </style>
             """, unsafe_allow_html=True)
 
-        st.text('商品価格昇順 / 画像クリックで商品ページへ')
+        st.text('最安値昇順 / 画像クリックで商品ページへ')
         
         # CSVファイルとしてデータを出力するボタン
         csv = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
@@ -220,7 +221,7 @@ if selected_item == 'csv検索':
 
                 # カラムの順番と名前を変更
                 df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '通販単価', '税率区分名', '商品分類6名'])
-                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '通販単価', '税率区分名', '送料区分']
+                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '最安値', 'P倍付', '送料', 'SALE終了', '仕入単価', '通販単価', '税率区分名', '送料区分']
 
                 # 画像にリンクをつける
                 df_result['画像'] = df_result.apply(
@@ -238,33 +239,50 @@ if selected_item == 'csv検索':
 
                 # ポイント計算（税率区分名に基づいて計算）
                 df_result['ポイント数'] = df_result.apply(
-                    lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
+                    lambda row: round((row['最安値'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['最安値'] / 1.1) * 0.01 * row['P倍付']),
                     axis=1
                 )
-                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+                df_result['価格-ポイント'] = df_result['最安値'] - df_result['ポイント数']
 
                 # ポイント計算（税率区分名に基づいて計算）
                 df_result['最安時粗利額'] = df_result.apply(
-                    lambda row: (row['商品価格'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['商品価格'] - round(row['仕入単価']*1.1)),
-                    axis=1
-                )
-                df_result['最安時粗利率'] = df_result.apply(
-                    lambda row: int((1 - (row['仕入単価'] * 1.08) / row['商品価格'])) if row['税率区分名'] == '軽減税率' else int((1 - (row['仕入単価'] * 1.1) / row['商品価格'])),
-                    axis=1
-                )
-                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
-                df_result['価格差'] = df_result['通販単価'] - df_result['商品価格']
-                df_result['変更価格'] = ''
-                df_result['変更後粗利額'] = df.apply(
-                    lambda row: f"=IF(L{row.name + 2}=\"課税\", F{row.name + 2} - H{row.name + 2}*1.1, F{row.name + 2} - H{row.name + 2}*1.08)",
-                    axis=1
-                )
-                df_result['変更後粗利率'] = df.apply(
-                    lambda row: f"=ROUNDDOWN(IF(L{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/F{row.name + 2}), (1-(H{row.name + 2})*1.08/F{row.name + 2})),2)",
+                    lambda row: (row['最安値'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['最安値'] - round(row['仕入単価']*1.1)),
                     axis=1
                 )
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '変更価格', '送料', '仕入単価', '通販単価', '価格差', '送料区分', '税率区分名', '最安時粗利額', '最安時粗利率', '変更後粗利額', '変更後粗利率']]
+                df_result['最安時粗利率'] = df_result.apply(
+                    lambda row: math.floor((1 - (row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1)) / row['最安値']) * 1000) / 1000,
+                    axis=1
+                )
+
+                df_result['価格-ポイント'] = df_result['最安値'] - df_result['ポイント数']
+                df_result['価格差'] = df_result['通販単価'] - df_result['最安値']
+
+                df_result['推奨価格時粗利率'] = df_result.apply(
+                    lambda row: float(format(
+                        (1 - (row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1)) / row['最安値']))),
+                    axis=1
+                )
+
+                df_result['推奨価格'] = df_result.apply(
+                    lambda row: row['最安値'] if row['推奨価格時粗利率'] >= 0.2 else (
+                        math.floor(row['仕入単価'] / (1 - 0.17)) if row['最安時粗利率'] >= 2000 else math.floor(row['仕入単価'] / (1 - 0.2))
+                    ),
+                    axis=1
+                )
+
+                df_result['変更価格'] = ''
+                df_result['変更後粗利額'] = df.apply(
+                    lambda row: f"=IF(G{row.name + 2}=\"課税\", O{row.name + 2} - H{row.name + 2}*1.1, O{row.name + 2} - H{row.name + 2}*1.08)",
+                    axis=1
+                )
+
+                df_result['変更後粗利率'] = df.apply(
+                    lambda row: f"=ROUNDDOWN(IF(G{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/O{row.name + 2}), (1-(H{row.name + 2})*1.08/O{row.name + 2})),2)",
+                    axis=1
+                )
+
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '最安値', '送料', '税率区分名', '仕入単価', '通販単価', '価格差', '送料区分', '最安時粗利額', '最安時粗利率', '推奨価格', '変更価格', '変更後粗利額', '変更後粗利率']]
 
 
                 # 特定の条件に基づいて行に色を付ける関数
@@ -273,7 +291,8 @@ if selected_item == 'csv検索':
 
                 # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
                 styled_df = df_result.style.apply(highlight_shop, axis=1).format({
-                    'レビュー平均点': "{:.2f}"
+                    'レビュー平均点': "{:.2f}",
+                    '最安時粗利率': "{:.2f}"
                 })
 
                 # カスタムCSSを定義
@@ -368,7 +387,7 @@ if selected_item == 'csv検索':
 
                 # カラムの順番と名前を変更
                 df_result = df_result.reindex(columns=['商品コード', 'mediumImageUrls', 'shopName', 'itemName', 'itemUrl', 'itemPrice', 'pointRate', 'postageFlag', 'endTime', '仕入単価', '通販単価', '税率区分名', '商品分類6名'])
-                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '商品価格', 'P倍付', '送料', 'SALE終了', '仕入単価', '通販単価', '税率区分名', '送料区分']
+                df_result.columns = ['商品コード', '画像', 'ショップ', '商品名', 'URL', '最安値', 'P倍付', '送料', 'SALE終了', '仕入単価', '通販単価', '税率区分名', '送料区分']
 
                 # 画像にリンクをつける
                 df_result['画像'] = df_result.apply(
@@ -386,33 +405,50 @@ if selected_item == 'csv検索':
 
                 # ポイント計算（税率区分名に基づいて計算）
                 df_result['ポイント数'] = df_result.apply(
-                    lambda row: round((row['商品価格'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['商品価格'] / 1.1) * 0.01 * row['P倍付']),
+                    lambda row: round((row['最安値'] / 1.08) * 0.01 * row['P倍付']) if row['税率区分名'] == '軽減税率' else round((row['最安値'] / 1.1) * 0.01 * row['P倍付']),
                     axis=1
                 )
-                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
+                df_result['価格-ポイント'] = df_result['最安値'] - df_result['ポイント数']
 
                 # ポイント計算（税率区分名に基づいて計算）
                 df_result['最安時粗利額'] = df_result.apply(
-                    lambda row: (row['商品価格'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['商品価格'] - round(row['仕入単価']*1.1)),
+                    lambda row: (row['最安値'] - round(row['仕入単価']*1.08)) if row['税率区分名'] == '軽減税率' else (row['最安値'] - round(row['仕入単価']*1.1)),
                     axis=1
                 )
+                
                 df_result['最安時粗利率'] = df_result.apply(
-                    lambda row: int((1 - (row['仕入単価'] * 1.08) / row['商品価格'])) if row['税率区分名'] == '軽減税率' else int((1 - (row['仕入単価'] * 1.1) / row['商品価格'])),
-                    axis=1
-                )
-                df_result['価格-ポイント'] = df_result['商品価格'] - df_result['ポイント数']
-                df_result['価格差'] = df_result['通販単価'] - df_result['商品価格']
-                df_result['変更価格'] = ''
-                df_result['変更後粗利額'] = df.apply(
-                    lambda row: f"=IF(L{row.name + 2}=\"課税\", F{row.name + 2} - H{row.name + 2}*1.1, F{row.name + 2} - H{row.name + 2}*1.08)",
-                    axis=1
-                )
-                df_result['変更後粗利率'] = df.apply(
-                    lambda row: f"=ROUNDDOWN(IF(L{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/F{row.name + 2}), (1-(H{row.name + 2})*1.08/F{row.name + 2})),2)",
+                    lambda row: math.floor((1 - (row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1)) / row['最安値']) * 1000) / 1000,
                     axis=1
                 )
 
-                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '商品価格', '変更価格', '送料', '仕入単価', '通販単価', '価格差', '送料区分', '税率区分名', '最安時粗利額', '最安時粗利率', '変更後粗利額', '変更後粗利率']]
+                df_result['価格-ポイント'] = df_result['最安値'] - df_result['ポイント数']
+                df_result['価格差'] = df_result['通販単価'] - df_result['最安値']
+
+                df_result['推奨価格時粗利率'] = df_result.apply(
+                    lambda row: float(format(
+                        (1 - (row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1)) / row['最安値']))),
+                    axis=1
+                )
+
+                df_result['推奨価格'] = df_result.apply(
+                    lambda row: row['最安値'] if row['推奨価格時粗利率'] >= 0.2 else (
+                        math.floor(row['仕入単価'] / (1 - 0.17)) if row['最安時粗利率'] >= 2000 else math.floor(row['仕入単価'] / (1 - 0.2))
+                    ),
+                    axis=1
+                )
+
+                df_result['変更価格'] = ''
+                df_result['変更後粗利額'] = df.apply(
+                    lambda row: f"=IF(G{row.name + 2}=\"課税\", O{row.name + 2} - H{row.name + 2}*1.1, O{row.name + 2} - H{row.name + 2}*1.08)",
+                    axis=1
+                )
+
+                df_result['変更後粗利率'] = df.apply(
+                    lambda row: f"=ROUNDDOWN(IF(G{row.name + 2}=\"課税\", (1-(H{row.name + 2})*1.1/O{row.name + 2}), (1-(H{row.name + 2})*1.08/O{row.name + 2})),2)",
+                    axis=1
+                )
+
+                df_result = df_result[['商品コード', '画像', 'ショップ', '商品名', '最安値', '送料', '税率区分名', '仕入単価', '通販単価', '価格差', '送料区分', '最安時粗利額', '最安時粗利率', '推奨価格', '変更価格', '変更後粗利額', '変更後粗利率']]
 
                 # 特定の条件に基づいて行に色を付ける関数
                 def highlight_shop(row):
@@ -420,7 +456,8 @@ if selected_item == 'csv検索':
                 
                 # スタイルを適用し、レビュー平均点を小数点第2位までフォーマット
                 styled_df = df_result.style.apply(highlight_shop, axis=1).format({
-                    'レビュー平均点': "{:.2f}"
+                    'レビュー平均点': "{:.2f}",
+                    '最安時粗利率': "{:.2f}"
                 })
 
                 # カスタムCSSを定義
@@ -441,10 +478,12 @@ if selected_item == 'csv検索':
                 # CSVファイルとしてデータを出力するボタン
                 csv = df_result.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
 
+                today_date_8digit = datetime.today().strftime('%Y%m%d')
+
                 st.download_button(
-                    label="CSVファイルとしてダウンロード",
-                    data=csv,
-                    file_name='楽天市場検索結果.csv',
+                    label="CSVファイルをダウンロード",
+                    data=csv,  # csv は CSV データを含む文字列またはバイナリデータにしておく
+                    file_name=f"{today_date_8digit}価格調査結果.csv",
                     mime='text/csv',
                 )
 
@@ -468,8 +507,8 @@ if selected_item == '価格更新ファイル作成':
             df00 = pd.read_csv(uploaded_file3, encoding='utf-8')
 
             # 楽天用データの作成
-            df01 = df00[['商品コード', '商品価格', '通販単価']]
-            df01 = df01.rename(columns={'商品コード': '商品管理番号（商品URL）', '商品価格': '販売価格'})
+            df01 = df00[['商品コード', '変更価格', '通販単価']]
+            df01 = df01.rename(columns={'商品コード': '商品管理番号（商品URL）', '変更価格': '販売価格'})
 
             # 商品番号関連の列を文字列型に変換
             df01['商品番号'] = df01['商品管理番号（商品URL）'].astype(str)
@@ -520,8 +559,8 @@ if selected_item == '価格更新ファイル作成':
             )
 
             # Yahoo用データの作成
-            df02 = df00[['商品コード', '通販単価', '商品価格']]
-            df02 = df02.rename(columns={'商品コード': 'code', '通販単価': 'original-price', '商品価格': 'price'})
+            df02 = df00[['商品コード', '通販単価', '変更価格']]
+            df02 = df02.rename(columns={'商品コード': 'code', '通販単価': 'original-price', '変更価格': 'price'})
 
             # 販売価格をstr型に変換（int型だとNaNを入れられないため）
             df02['original-price'] = df02['original-price'].astype(str)
@@ -545,9 +584,9 @@ if selected_item == '価格更新ファイル作成':
             start_date = f"{now.year}/{now.month}/{now.day} 00:00"
             end_date = f"2050/12/31 23:59"
 
-            # 商品コードはint型、商品価格はfloat型に変換
-            df03 = df00[['商品コード', '通販単価', '商品価格', '税率区分名']]
-            df03 = df03.rename(columns={'商品コード': '品番3', '通販単価': '販売価格(税込)[レベル1：通常会員]', '商品価格': 'セール価格(税込)[レベル1：通常会員]'})
+            # 商品コードはint型、変更価格はfloat型に変換
+            df03 = df00[['商品コード', '通販単価', '変更価格', '税率区分名']]
+            df03 = df03.rename(columns={'商品コード': '品番3', '通販単価': '販売価格(税込)[レベル1：通常会員]', '変更価格': 'セール価格(税込)[レベル1：通常会員]'})
 
             # 通常会員の設定
             df03['販売価格(税込)[レベル1：通常会員]'] = df03['販売価格(税込)[レベル1：通常会員]']
