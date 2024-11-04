@@ -261,12 +261,12 @@ if selected_item == 'csv検索':
 
                 df_result['推奨価格時粗利率'] = df_result.apply(
                     lambda row: float(format(
-                        (1 - (row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1)) / row['最安値']))),
+                        (1 - math.floor(row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1)) / row['最安値']))),
                     axis=1
                 )
 
                 df_result['推奨価格'] = df_result.apply(
-                    lambda row: row['最安値'] if row['推奨価格時粗利率'] >= 0.2 else (
+                    lambda row: row['最安値'] if row['推奨価格時粗利率'] > 0.2 else (
                         math.floor(row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1) / (1 - 0.17)) if row['最安時粗利率'] >= 2000 else math.floor(row['仕入単価'] * (1.08 if row['税率区分名'] == '軽減税率' else 1.1) / (1 - 0.2))
                     ),
                     axis=1
