@@ -124,21 +124,7 @@ if selected_item == '個別検索':
         # インデックスをリセット
         df = df.reset_index(drop=True)
 
-        # カスタムCSSを定義
-        st.markdown("""
-            <style>
-            /* 正しいクラスセレクタの記述 */
-                    
-            .st-emotion-cache-13ln4jf {
-                max-width: none;
-                margin: 20px;
-                font-size: 14px;
-            }
-            .st-emotion-cache-1rsyhoq th {
-                text-align: left;
-            }
-            </style>
-            """, unsafe_allow_html=True)
+
 
         st.text('最安値昇順 / 画像クリックで商品ページへ')
         
