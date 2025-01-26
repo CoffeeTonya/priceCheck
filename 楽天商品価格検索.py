@@ -7,6 +7,8 @@ import csv
 from datetime import datetime
 import math
 
+st.markdown('<link rel="stylesheet" href="style.css">', unsafe_allow_html=True)
+
 REQUEST_URL = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706"
 APP_ID = 1027604414937000350
 
