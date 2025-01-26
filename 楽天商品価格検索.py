@@ -12,7 +12,7 @@ st.markdown('<link rel="stylesheet" href="style.css">', unsafe_allow_html=True)
 st.markdown("""
     <style>
     .st-emotion-cache-yw8pof {
-        padding: 6rem 2rem 10rem
+        padding: 6rem 2rem 10rem!important;
         max-width: 100%!important;
     }
     </style>
