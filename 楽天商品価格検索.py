@@ -291,20 +291,6 @@ if selected_item == 'csv検索':
                     '最安時粗利率': "{:.2f}"
                 })
 
-                # カスタムCSSを定義
-                st.markdown("""
-                    <style>
-                    /* 正しいクラスセレクタの記述 */
-                    .st-emotion-cache-13ln4jf {
-                        max-width: none;
-                        margin: 20px;
-                        font-size: 14px;
-                    }
-                    .st-emotion-cache-1rsyhoq th {
-                        text-align: left;
-                    }
-                    </style>
-                    """, unsafe_allow_html=True)
 
                 # CSVファイルとしてデータを出力するボタン
                 csv = df_result.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
@@ -456,20 +442,6 @@ if selected_item == 'csv検索':
                     '最安時粗利率': "{:.2f}"
                 })
 
-                # カスタムCSSを定義
-                st.markdown("""
-                    <style>
-                    /* 正しいクラスセレクタの記述 */
-                    .st-emotion-cache-13ln4jf {
-                        max-width: none;
-                        margin: 20px;
-                        font-size: 14px;
-                    }
-                    .st-emotion-cache-1rsyhoq th {
-                        text-align: left;
-                    }
-                    </style>
-                    """, unsafe_allow_html=True)
 
                 # CSVファイルとしてデータを出力するボタン
                 csv = df_result.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
