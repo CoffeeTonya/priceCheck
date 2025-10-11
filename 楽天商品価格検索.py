@@ -73,6 +73,16 @@ if selected_item == '個別検索':
         response = requests.get(REQUEST_URL, search_params)
         result = response.json()
 
+        # APIエラーチェック
+        if 'error' in result:
+            st.error(f"API エラー: {result.get('error_description', '不明なエラー')}")
+            st.stop()
+
+        # 検索結果チェック
+        if 'Items' not in result or len(result['Items']) == 0:
+            st.warning('検索結果が見つかりませんでした。検索条件を変更してください。')
+            st.stop()
+
         # 格納
         item_list = []
         item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
@@ -197,6 +207,10 @@ if selected_item == 'csv検索':
                     # リクエストを送信
                     response = requests.get(REQUEST_URL, search_params)
                     result = response.json()
+
+                    # APIエラーまたは検索結果なしの場合はスキップ
+                    if 'error' in result or 'Items' not in result or len(result['Items']) == 0:
+                        continue
 
                     # 格納
                     item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
@@ -350,6 +364,10 @@ if selected_item == 'csv検索':
                     # リクエストを送信
                     response = requests.get(REQUEST_URL, search_params)
                     result = response.json()
+
+                    # APIエラーまたは検索結果なしの場合はスキップ
+                    if 'error' in result or 'Items' not in result or len(result['Items']) == 0:
+                        continue
 
                     # 格納
                     item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
