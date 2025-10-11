@@ -83,12 +83,15 @@ if selected_item == '個別検索':
             st.warning('検索結果が見つかりませんでした。検索条件を変更してください。')
             st.stop()
 
-        # 格納
+        # 格納（自社店舗を除外）
         item_list = []
         item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
         for i in range(0, len(result['Items'])):
             tmp_item = {}
             item = result['Items'][i]['Item']
+            # 自社店舗を除外
+            if item.get('shopName') == 'FRESH ROASTER珈琲問屋 楽天市場店':
+                continue
             for key in item_key:
                 if key in item:
                     tmp_item[key] = item[key]
@@ -190,7 +193,7 @@ if selected_item == 'csv検索':
                     tax_class = row['税率区分名'] 
                     ships_free = row['商品分類6名'] 
                     
-                    # 入力パラメータ
+                    # 入力パラメータ（自社店舗除外のため検索件数を増やす）
                     search_params = {
                         "format": "json",
                         "keyword": search_keyword,
@@ -199,7 +202,7 @@ if selected_item == 'csv検索':
                         "maxPrice": maxPrice,
                         "applicationId": APP_ID,
                         "availability": 1,
-                        "hits": 1,
+                        "hits": 5,
                         "page": 1,
                         'sort': '+itemPrice',
                     }
@@ -212,11 +215,14 @@ if selected_item == 'csv検索':
                     if 'error' in result or 'Items' not in result or len(result['Items']) == 0:
                         continue
 
-                    # 格納
+                    # 格納（自社店舗を除外して最安値1件のみ取得）
                     item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
                     for i in range(len(result['Items'])):
                         tmp_item = {}
                         item = result['Items'][i]['Item']
+                        # 自社店舗を除外
+                        if item.get('shopName') == 'FRESH ROASTER珈琲問屋 楽天市場店':
+                            continue
                         for key in item_key:
                             if key in item:
                                 tmp_item[key] = item[key]
@@ -226,6 +232,7 @@ if selected_item == 'csv検索':
                         tmp_item['税率区分名'] = tax_class
                         tmp_item['商品分類6名'] = ships_free
                         item_list.append(tmp_item.copy())
+                        break  # 最安値1件のみ取得したらループを抜ける
 
                 # 結果をDataFrameに変換
                 df_result = pd.DataFrame(item_list)
@@ -347,7 +354,7 @@ if selected_item == 'csv検索':
                     tax_class = row['税率区分名'] 
                     ships_free = row['商品分類6名'] 
 
-                    # 入力パラメータ
+                    # 入力パラメータ（自社店舗除外のため検索件数を増やす）
                     search_params = {
                         "format": "json",
                         "keyword": search_keyword,
@@ -356,7 +363,7 @@ if selected_item == 'csv検索':
                         "maxPrice": maxPrice,
                         "applicationId": APP_ID,
                         "availability": 1,
-                        "hits": 1,
+                        "hits": 5,
                         "page": 1,
                         'sort': '+itemPrice',
                     }
@@ -369,11 +376,14 @@ if selected_item == 'csv検索':
                     if 'error' in result or 'Items' not in result or len(result['Items']) == 0:
                         continue
 
-                    # 格納
+                    # 格納（自社店舗を除外して最安値1件のみ取得）
                     item_key = ['shopName', 'itemCode', 'itemName', 'itemPrice', 'pointRate', 'postageFlag', 'itemUrl', 'reviewCount', 'reviewAverage', 'endTime', 'mediumImageUrls']
                     for i in range(len(result['Items'])):
                         tmp_item = {}
                         item = result['Items'][i]['Item']
+                        # 自社店舗を除外
+                        if item.get('shopName') == 'FRESH ROASTER珈琲問屋 楽天市場店':
+                            continue
                         for key in item_key:
                             if key in item:
                                 tmp_item[key] = item[key]
@@ -383,6 +393,7 @@ if selected_item == 'csv検索':
                         tmp_item['税率区分名'] = tax_class
                         tmp_item['商品分類6名'] = ships_free
                         item_list.append(tmp_item.copy())
+                        break  # 最安値1件のみ取得したらループを抜ける
 
                 # 結果をDataFrameに変換
                 df_result = pd.DataFrame(item_list)
