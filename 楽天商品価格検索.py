@@ -507,15 +507,15 @@ if selected_item == '価格更新ファイル作成':
 
             # 楽天用データの作成
             df01 = df00[['商品コード', '変更価格', '通販単価']]
-            df01 = df01.rename(columns={'商品コード': '商品管理番号（商品URL）', '変更価格': '販売価格'})
+            df01 = df01.rename(columns={'商品コード': '商品管理番号（商品URL）', '変更価格': '通常購入販売価格'})
 
             # 商品番号関連の列を文字列型に変換
             df01['商品番号'] = df01['商品管理番号（商品URL）'].astype(str)
             df01['SKU管理番号'] = df01['商品管理番号（商品URL）'].astype(str)
             df01['システム連携用SKU番号'] = df01['商品管理番号（商品URL）'].astype(str)
 
-            # 販売価格をstr型に変換（int型だとNaNを入れられないため）
-            df01['販売価格'] = df01['販売価格'].astype(str)
+            # 通常購入販売価格をstr型に変換（int型だとNaNを入れられないため）
+            df01['通常購入販売価格'] = df01['通常購入販売価格'].astype(str)
             df01['表示価格'] = df01['通販単価'].astype(str)
 
             # 新しい列を追加して、値を入れない（NaNに設定）
@@ -525,13 +525,13 @@ if selected_item == '価格更新ファイル作成':
             df01['バリエーション項目選択肢2'] = np.nan
             df01['二重価格文言管理番号'] = str(1)
 
-            # 行を複製し、元の行の販売価格、SKU関連の値を削除（NaNに変更）
+            # 行を複製し、元の行の通常購入販売価格、SKU関連の値を削除（NaNに変更）
             for i in range(0, len(df01)):
                 # 複製する行をコピー
                 duplicated_row = df01.loc[i].copy()
 
-                # 元のデータの「販売価格」とSKU関連番号をNaNにする
-                df01.loc[i, '販売価格'] = np.nan
+                # 元のデータの「通常購入販売価格」とSKU関連番号をNaNにする
+                df01.loc[i, '通常購入販売価格'] = np.nan
                 df01.loc[i, '表示価格'] = np.nan
                 df01.loc[i, 'SKU管理番号'] = np.nan
                 df01.loc[i, 'システム連携用SKU番号'] = np.nan
@@ -543,9 +543,9 @@ if selected_item == '価格更新ファイル作成':
             # 商品管理番号（商品URL）で並び替え
             df01_sorted = df01.sort_values(by=['商品管理番号（商品URL）', '商品番号'])
 
-            # 販売価格に値が入っている場合、商品番号をNaNにする
-            df01_sorted.loc[df01_sorted['販売価格'].notna(), '商品番号'] = np.nan
-            df_rakuten = df01_sorted[['商品管理番号（商品URL）', '商品番号', 'SKU管理番号', 'システム連携用SKU番号', 'バリエーション項目キー1', 'バリエーション項目キー2', 'バリエーション項目選択肢1', 'バリエーション項目選択肢2', '販売価格', '表示価格', '二重価格文言管理番号']]
+            # 通常購入販売価格に値が入っている場合、商品番号をNaNにする
+            df01_sorted.loc[df01_sorted['通常購入販売価格'].notna(), '商品番号'] = np.nan
+            df_rakuten = df01_sorted[['商品管理番号（商品URL）', '商品番号', 'SKU管理番号', 'システム連携用SKU番号', 'バリエーション項目キー1', 'バリエーション項目キー2', 'バリエーション項目選択肢1', 'バリエーション項目選択肢2', '通常購入販売価格', '表示価格', '二重価格文言管理番号']]
 
             # CSVファイルとしてデータを出力するボタン
             csv_rakuten = df_rakuten.to_csv(index=False, encoding='shift-jis').encode('utf-8-sig')
